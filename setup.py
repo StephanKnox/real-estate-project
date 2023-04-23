@@ -5,7 +5,14 @@ setup(
     packages=find_packages(exclude=["realestate_scraping_tests"]),
     install_requires=[
         "dagster",
-        "dagster-cloud"
+        "dagster-cloud",
+        "dagit",
+        "pandas",
+        "selenium",
+        "beautifulsoup4",
+        "minio",
+        "requests",
+        "ratelimit"
     ],
     extras_require={"dev": ["dagit", "pytest"]},
 )

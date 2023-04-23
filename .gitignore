@@ -1,1 +1,3 @@
 realestate_scraping/data/
+realestate_scraping/delta/
+*.csv

@@ -1,4 +1,4 @@
-from dagster import Definitions
+from dagster import Definitions, fs_io_manager
 import os
 
 from .assets import core_assets
@@ -7,10 +7,17 @@ all_assets = [*core_assets]
 
 #deployment_name = os.environ.get("DAGSTER_DEPLOYMENT", "local")
 
-
+io_manager = fs_io_manager.configured(
+    {
+        "base_dir": "./realestate_scraping/data/",  
+    }
+)
 
 defs = Definitions(
     assets=all_assets,
+    resources={
+        "io_manager": io_manager,
+    },
 )
 
 #defs = Definitions(

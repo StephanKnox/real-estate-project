@@ -2,7 +2,7 @@ from dagster import asset, get_dagster_logger, Output
 from bs4 import BeautifulSoup
 from . import helper_functions as hf
 from datetime import datetime
-import re
+from minio import Minio
 import os
 
 
@@ -12,7 +12,10 @@ REALESTATE_RADIUS = '1'
 LOCAL_PATH = './realestate_scraping/data/'
 
 
-@asset
+@asset(
+    #group_name="scraping",
+    io_manager_key="io_manager", 
+)
 def download_pages(context):
     date_today = datetime.today().strftime('%y%m%d')
     last_page_number = hf.get_last_page_number(REALESTATE_BASE_URL, REALESTATE_CITY, REALESTATE_RADIUS)
@@ -37,10 +40,12 @@ def download_pages(context):
             page = str(driver.page_source)
             with open(LOCAL_PATH + filename, "w") as f:
                 f.write(page)
+            return [1, 2, 3]
         except ConnectionError as e :
-            context.log.info(f"Connection Error: Could not connect to {page}")
+            context.log.error(f"Connection Error: Could not connect to {page}")
 
 
+# TO DO: Change return type to a property dataframe? -> PropertyDataFrame, where to define PropertyDataFrame type?
 @asset
 def scrape_pages(context, download_pages):
     dict_ids_prices = {}
@@ -69,6 +74,20 @@ def scrape_pages(context, download_pages):
             'last_normalized_price': last_normalized_price
             }
         )
-    context.log.info(dict_prop_df)
+    #context.log.info(dict_prop_df)
     return dict_prop_df  
 
+
+# @asset
+#def upload_to_s3(files_list):
+#
+#   minio_url = "localhost:9000"
+#   minio_access_key = "Cb5bODHLhocuw9gH"
+#   minio_secret_key = "3utk358B2rHGwMegTiFY01FUsbBWHcVj"
+#   minio_bucket_name = "delta"
+#
+#   minio_client = Minio(endpoint=minio_url, access_key=minio_access_key, secret_key=minio_secret_key, secure=False)
+#   for _file in files_list:
+#       filename = os.path.basename(_file)
+#       filepath = os.path.abspath(_file)
+#       minio_client.fput_object(bucket_name=minio_bucket_name, object_name=filename, file_path=filepath)
