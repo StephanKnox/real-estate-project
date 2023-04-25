@@ -34,16 +34,19 @@ SCHEMA = StructType(
     ]
 )
 
+path_to_delta = 'file:///Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/delta'
+
+
 ## Read a .csv file into spark dataframe
-#df_acidentes = (
-#    spark
-#    .read.format("csv")
-#    .option("delimiter", ";")
-#    .option("header", "true")
-#    .option("encoding", "ISO-8859-1")
-#    .schema(SCHEMA)
-#  .load("realestate-scraping/realestate_scraping/datatran2022.csv")
-#)
+df_acidentes = (
+    spark
+    .read.format("csv")
+    .option("delimiter", ";")
+    .option("header", "true")
+    .option("encoding", "ISO-8859-1")
+    .schema(SCHEMA)
+  .load("file:///Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/datatran2022.csv")
+)
 
 #df_acidentes.show(5)
 
@@ -57,7 +60,7 @@ SCHEMA = StructType(
 
 
 ## Reading from a Delta table into a PySpark dataframe
-path_to_delta = 'file:///Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/delta'
+#path_to_delta = 'file:///Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/delta'
 #df_acidentes_delta = (
 #    spark
 #    .read.format("delta")
@@ -72,12 +75,14 @@ df_existing_props = (spark.sql(f"SELECT id, data_inversa FROM delta.`{path_to_de
 #cols_props = ['id', 'data_inversa']
 ## Convert Spark dataframe to Pandas dataframe
 pd_existing_props = df_existing_props.select("*").toPandas()
+pd_acidentes = df_acidentes.select("*").toPandas()
 
 # Query Pandas dataframe via SQL like interface
 df_changed = psql.sqldf(
         """
         SELECT p.id
         FROM pd_existing_props p 
+        INNER JOIN pd_acidentes pr ON pr.id = p.id
             WHERE p.id IN ('405151', '501893')
         """
     )

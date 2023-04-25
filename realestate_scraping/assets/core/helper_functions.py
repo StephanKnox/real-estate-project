@@ -7,6 +7,12 @@ from bs4 import BeautifulSoup
 import os
 
 
+class SQL:
+    def __init__(self, sql, **bindings):
+        self.sql = sql
+        self.bindings = bindings
+        
+
 def init_webdriver():
     options = webdriver.ChromeOptions()
     options.add_argument('--ignore-certificate-errors')

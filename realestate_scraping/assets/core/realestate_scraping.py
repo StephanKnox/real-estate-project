@@ -1,9 +1,18 @@
-from dagster import asset, get_dagster_logger, Output
+from dagster import asset, get_dagster_logger, Output, FileHandle, Definitions
 from bs4 import BeautifulSoup
 from . import helper_functions as hf
 from datetime import datetime
 from minio import Minio
 import os
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructField, StructType, StringType, IntegerType, DoubleType
+import pyspark.sql.functions as F
+from delta.tables import DeltaTable
+from delta.pip_utils import configure_spark_with_delta_pip
+import pandas as pd
+import pandasql as psql
+import pyspark.pandas as ps
+import pyarrow
 
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
@@ -12,11 +21,10 @@ REALESTATE_RADIUS = '1'
 LOCAL_PATH = './realestate_scraping/data/'
 
 
-@asset(
     #group_name="scraping",
-    io_manager_key="io_manager", 
-)
-def download_pages(context):
+    #io_manager_key="io_manager", 
+@asset
+def download_pages(context): #-> FileHandle:
     date_today = datetime.today().strftime('%y%m%d')
     last_page_number = hf.get_last_page_number(REALESTATE_BASE_URL, REALESTATE_CITY, REALESTATE_RADIUS)
 
@@ -40,7 +48,7 @@ def download_pages(context):
             page = str(driver.page_source)
             with open(LOCAL_PATH + filename, "w") as f:
                 f.write(page)
-            return [1, 2, 3]
+                context.log.info(f"File {filename} written to {LOCAL_PATH}")
         except ConnectionError as e :
             context.log.error(f"Connection Error: Could not connect to {page}")
 
@@ -51,7 +59,8 @@ def scrape_pages(context, download_pages):
     dict_ids_prices = {}
     pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
 
-    for page in pages_to_scrap:
+    for cnt, page in enumerate(pages_to_scrap):
+        
         ids = []
         prices = []
         with open(page, 'r') as f:
@@ -61,7 +70,7 @@ def scrape_pages(context, download_pages):
 
             for _idx in range(len(ids)):
                 dict_ids_prices[ids[_idx]] = prices[_idx]
-        
+    context.log.info(f"{cnt} pages processed.")
     dict_prop_df = []
     for _idx in dict_ids_prices:
         last_normalized_price = dict_ids_prices[_idx]
@@ -74,9 +83,32 @@ def scrape_pages(context, download_pages):
             'last_normalized_price': last_normalized_price
             }
         )
-    #context.log.info(dict_prop_df)
+    context.log.info(f"{len(dict_prop_df)} properties scraped.")
     return dict_prop_df  
 
+
+@asset
+def filter_for_new_properties(context, scrape_pages):
+    #context.log.info(scrape_pages)
+    cols_PropertyDataFrame = [
+        'id',
+        'fingerprint',
+ #       'is_prefix',
+#        'rentOrBuy',
+        'city',
+ #       'propertyType',
+        'radius',
+        'last_normalized_price',
+    ]
+    pd_scraped_properties = pd.DataFrame(scrape_pages, columns=cols_PropertyDataFrame)
+    df_changed = psql.sqldf(
+        """ 
+        SELECT id, fingerprint, city
+        FROM pd_scraped_properties
+        WHERE id IN ('7684950','7684949','7574202')
+        """)
+    context.log.info(df_changed)
+#defs = Definitions(assets=[scrape_pages])
 
 # @asset
 #def upload_to_s3(files_list):
@@ -91,3 +123,8 @@ def scrape_pages(context, download_pages):
 #       filename = os.path.basename(_file)
 #       filepath = os.path.abspath(_file)
 #       minio_client.fput_object(bucket_name=minio_bucket_name, object_name=filename, file_path=filepath)
+@asset(
+    required_resource_keys={"s3"}
+)
+def create_delta_table():
+    pass
