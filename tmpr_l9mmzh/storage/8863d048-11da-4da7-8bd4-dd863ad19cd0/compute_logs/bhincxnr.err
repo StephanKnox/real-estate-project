@@ -1,8 +1,0 @@
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - 21676 - LOGS_CAPTURED - Started capturing logs in process (pid: 21676).
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - 21676 - create_delta_table - STEP_START - Started execution of step "create_delta_table".
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - create_delta_table - b'lake/bronze/property/notes.txt'
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - 21676 - create_delta_table - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - create_delta_table - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpr_l9mmzh/storage/create_delta_table
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - 21676 - create_delta_table - ASSET_MATERIALIZATION - Materialized value create_delta_table.
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - 21676 - create_delta_table - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
-[32m2023-04-25 18:17:41 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8863d048-11da-4da7-8bd4-dd863ad19cd0 - 21676 - create_delta_table - STEP_SUCCESS - Finished execution of step "create_delta_table" in 35ms.

@@ -20,6 +20,7 @@ REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
 REALESTATE_CITY = 'zuerich'
 REALESTATE_RADIUS = '1'
 LOCAL_PATH = './realestate_scraping/data/'
+LOCAL_PATH_TMP = '/Users/ctac/Desktop/Data Engineer /Projects/GPU-Prices-Scrapper/out/data'
 
 
     #group_name="scraping",
@@ -130,15 +131,17 @@ def filter_for_new_properties(context, scrape_pages):
     required_resource_keys={"s3"}
 )
 def upload_to_s3(context):
-    s3_client = context.resources.s3._get_s3_client()
+    #s3_client = context.resources.s3._get_s3_client()
     #objects = s3_client.list_objects(context.resources.s3.bucket_name ,recursive=True)
-    pages_to_upload = hf.get_pages_from_local(LOCAL_PATH)
+    pages_to_upload = hf.get_pages_from_local(LOCAL_PATH_TMP)
+    bucket = 'raw'
     for _obj in pages_to_upload:
         context.log.info(_obj)
         filename = os.path.basename(_obj)
         #try:
-        s3_client.fput_object(context.resources.s3.bucket_name, filename, _obj)
-        context.log.info(f"File {_obj} uploaded to {context.resources.s3.bucket_name}")
+        #s3_client.fput_object(context.resources.s3.bucket_name, filename, _obj)
+        context.resources.s3._upload_file_to_s3(bucket, filename, _obj)
+        context.log.info(f"File {_obj} uploaded to {bucket}")
         #except Error#ResponseError as err:
          #   context.log.error(err)
     #for obj in objects:
@@ -147,3 +150,9 @@ def upload_to_s3(context):
             #+' '+obj.etag  obj.size, obj.content_type)
     #context.log.info(s3_client.list_buckets())
     
+@asset(
+        required_resource_keys={"spark_delta"}
+)
+def create_delta_table(context):
+    df = context.resources.spark_delta._read_delta_table()
+    context.log.info(df.head(3))
