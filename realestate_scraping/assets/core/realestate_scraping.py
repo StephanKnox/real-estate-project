@@ -2,7 +2,7 @@ from dagster import asset, get_dagster_logger, Output, FileHandle, Definitions
 from bs4 import BeautifulSoup
 from . import helper_functions as hf
 from datetime import datetime
-from minio import Minio
+from minio import Minio, error
 import os
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructField, StructType, StringType, IntegerType, DoubleType
@@ -13,6 +13,7 @@ import pandas as pd
 import pandasql as psql
 import pyspark.pandas as ps
 import pyarrow
+#from minio.error import ResponseError
 
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
@@ -123,8 +124,26 @@ def filter_for_new_properties(context, scrape_pages):
 #       filename = os.path.basename(_file)
 #       filepath = os.path.abspath(_file)
 #       minio_client.fput_object(bucket_name=minio_bucket_name, object_name=filename, file_path=filepath)
+
+
 @asset(
     required_resource_keys={"s3"}
 )
-def create_delta_table():
-    pass
+def upload_to_s3(context):
+    s3_client = context.resources.s3._get_s3_client()
+    #objects = s3_client.list_objects(context.resources.s3.bucket_name ,recursive=True)
+    pages_to_upload = hf.get_pages_from_local(LOCAL_PATH)
+    for _obj in pages_to_upload:
+        context.log.info(_obj)
+        filename = os.path.basename(_obj)
+        #try:
+        s3_client.fput_object(context.resources.s3.bucket_name, filename, _obj)
+        context.log.info(f"File {_obj} uploaded to {context.resources.s3.bucket_name}")
+        #except Error#ResponseError as err:
+         #   context.log.error(err)
+    #for obj in objects:
+     #   context.log.info(#obj.bucket_name
+      #       obj.object_name.encode('utf-8')) #obj.last_modified +' '+
+            #+' '+obj.etag  obj.size, obj.content_type)
+    #context.log.info(s3_client.list_buckets())
+    

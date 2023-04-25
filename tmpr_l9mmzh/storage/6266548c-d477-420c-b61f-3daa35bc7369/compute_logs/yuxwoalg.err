@@ -1,0 +1,27 @@
+[32m2023-04-25 18:39:27 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 6266548c-d477-420c-b61f-3daa35bc7369 - 22868 - LOGS_CAPTURED - Started capturing logs in process (pid: 22868).
+[32m2023-04-25 18:39:27 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 6266548c-d477-420c-b61f-3daa35bc7369 - 22868 - upload_to_s3 - STEP_START - Started execution of step "upload_to_s3".
+[32m2023-04-25 18:39:27 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 6266548c-d477-420c-b61f-3daa35bc7369 - upload_to_s3 - ./realestate_scraping/data/230425_real_estate_data_zuerich_1_km_part_3.html
+[32m2023-04-25 18:39:27 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 6266548c-d477-420c-b61f-3daa35bc7369 - 22868 - upload_to_s3 - STEP_FAILURE - Execution of step "upload_to_s3" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "upload_to_s3"::
+
+FileNotFoundError: [Errno 2] No such file or directory: '/lake'
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 140, in upload_to_s3
+    s3_client.fput_object(context.resources.s3.bucket_name, _obj, "/lake" )
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 990, in fput_object
+    file_size = os.stat(file_path).st_size
+                ^^^^^^^^^^^^^^^^^^
+[0m
