@@ -1,0 +1,24 @@
+[32m2023-04-30 15:27:25 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8a2f4e16-039f-41c8-a5e6-68f650904a72 - 42659 - LOGS_CAPTURED - Started capturing logs in process (pid: 42659).
+[32m2023-04-30 15:27:25 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 8a2f4e16-039f-41c8-a5e6-68f650904a72 - 42659 - json_to_flat_properties - STEP_START - Started execution of step "json_to_flat_properties".
+[32m2023-04-30 15:27:25 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 8a2f4e16-039f-41c8-a5e6-68f650904a72 - 42659 - json_to_flat_properties - STEP_FAILURE - Execution of step "json_to_flat_properties" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "json_to_flat_properties"::
+
+AttributeError: 'function' object has no attribute '_read_json_properties'
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 171, in json_to_flat_properties
+    df = spark_session._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[0m

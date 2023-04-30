@@ -1,0 +1,4 @@
+23/04/30 14:30:42 WARN Utils: Your hostname, Stanislavs-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 172.20.10.6 instead (on interface en0)
+23/04/30 14:30:42 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+:: loading settings :: url = jar:file:/opt/homebrew/Cellar/apache-spark/3.3.1/libexec/jars/ivy-2.5.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+23/04/30 14:30:42 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable

@@ -13,6 +13,7 @@ import pandas as pd
 import pandasql as psql
 import pyspark.pandas as ps
 import pyarrow
+from botocore.exceptions import NoCredentialsError
 #from minio.error import ResponseError
 
 
@@ -21,6 +22,7 @@ REALESTATE_CITY = 'zuerich'
 REALESTATE_RADIUS = '1'
 LOCAL_PATH = './realestate_scraping/data/'
 LOCAL_PATH_TMP = '/Users/ctac/Desktop/Data Engineer /Projects/GPU-Prices-Scrapper/out/data'
+BUCKET_RAW = 'raw'
 
 
     #group_name="scraping",
@@ -62,7 +64,6 @@ def scrape_pages(context, download_pages):
     pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
 
     for cnt, page in enumerate(pages_to_scrap):
-        
         ids = []
         prices = []
         with open(page, 'r') as f:
@@ -73,6 +74,7 @@ def scrape_pages(context, download_pages):
             for _idx in range(len(ids)):
                 dict_ids_prices[ids[_idx]] = prices[_idx]
     context.log.info(f"{cnt} pages processed.")
+
     dict_prop_df = []
     for _idx in dict_ids_prices:
         last_normalized_price = dict_ids_prices[_idx]
@@ -134,25 +136,70 @@ def upload_to_s3(context):
     #s3_client = context.resources.s3._get_s3_client()
     #objects = s3_client.list_objects(context.resources.s3.bucket_name ,recursive=True)
     pages_to_upload = hf.get_pages_from_local(LOCAL_PATH_TMP)
-    bucket = 'raw'
+    
     for _obj in pages_to_upload:
         context.log.info(_obj)
         filename = os.path.basename(_obj)
-        #try:
+        try:
         #s3_client.fput_object(context.resources.s3.bucket_name, filename, _obj)
-        context.resources.s3._upload_file_to_s3(bucket, filename, _obj)
-        context.log.info(f"File {_obj} uploaded to {bucket}")
-        #except Error#ResponseError as err:
-         #   context.log.error(err)
+            context.resources.s3._upload_file_to_s3(BUCKET_RAW, filename, _obj)
+        #context.log.info(f"File {_obj} uploaded to '{bucket}' bucket")
+        except FileNotFoundError:
+         context.log.error("The file was not found")
+        except NoCredentialsError:
+            context.log.error("Credentials not available")
     #for obj in objects:
      #   context.log.info(#obj.bucket_name
       #       obj.object_name.encode('utf-8')) #obj.last_modified +' '+
             #+' '+obj.etag  obj.size, obj.content_type)
     #context.log.info(s3_client.list_buckets())
     
+
 @asset(
         required_resource_keys={"spark_delta"}
 )
 def create_delta_table(context):
     df = context.resources.spark_delta._read_delta_table()
     context.log.info(df.head(3))
+
+
+@asset(
+        required_resource_keys={"spark_delta", "s3"}
+)
+def json_to_flat_properties(context):
+    spark_session = context.resources.spark_delta._get_spark_session()
+    df = spark_session.read.format('csv').options(header='true', inferSchema='true', delimiter=";").load(f"s3a://{BUCKET_RAW}/datatran2022.csv")
+    context.log.info(df.show())
+    #spark_session.read.format('csv').options(header='true', inferSchema='true').load(f"s3a://{BUCKET_RAW}/")
+    """
+    df_acidentes = (
+    spark_session
+    .read.format("csv")
+    .option("delimiter", ";")
+    .option("header", "true")
+    .option("inferSchema", 'true')
+    .option("encoding", "ISO-8859-1")
+    #.schema(SCHEMA)
+    .load(f"s3a://{BUCKET_RAW}/datatran2022.csv")
+    )
+    context.log.info("File loaded into dataframe")
+    #df = spark_session._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
+    
+    df_zipped = spark_session \
+            .read \
+            .format("json") \
+            .option("compression", "gzip") \
+            .option("header", False) \
+            .load(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
+"""
+    #context.log.info(df_acidentes.show())
+    #s3_client = context.resources.s3._get_s3_client()
+    #endpoint = context.resources.s3.endpoint
+
+    #objects = s3_client.list_objects(BUCKET_RAW ,recursive=True)
+    #for _obj in objects:    
+     #   context.log.info(_obj.object_name)
+    #df = context.resources.spark_delta._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
+    #context.log.info(df.show(1))
+        #context.log.info(context.resources.s3._get_s3_client.list_objects(BUCKET_RAW, prefix="",recursive=True) )
+    #df = context.resources.spark_delta._read_json_properties()

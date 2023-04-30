@@ -1,0 +1,30 @@
+[32m2023-04-30 15:03:28 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5f83d7e0-4b70-487f-a94b-bc755a0e917c - 41602 - LOGS_CAPTURED - Started capturing logs in process (pid: 41602).
+[32m2023-04-30 15:03:28 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5f83d7e0-4b70-487f-a94b-bc755a0e917c - 41602 - json_to_flat_properties - STEP_START - Started execution of step "json_to_flat_properties".
+[32m2023-04-30 15:03:28 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 5f83d7e0-4b70-487f-a94b-bc755a0e917c - 41602 - json_to_flat_properties - STEP_FAILURE - Execution of step "json_to_flat_properties" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "json_to_flat_properties"::
+
+AttributeError: 'Builder' object has no attribute 'sparkContext'
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 177, in json_to_flat_properties
+    df = context.resources.spark_delta._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 85, in _read_json_properties
+    spark = self._get_spark_session()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 61, in _get_spark_session
+    sc = spark.sparkContext
+         ^^^^^^^^^^^^^^^^^^
+[0m

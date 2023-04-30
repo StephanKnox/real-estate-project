@@ -1,0 +1,56 @@
+[32m2023-04-30 15:02:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b5a246f-5814-4682-a2ac-e8d1d9d02991 - 41525 - LOGS_CAPTURED - Started capturing logs in process (pid: 41525).
+[32m2023-04-30 15:02:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b5a246f-5814-4682-a2ac-e8d1d9d02991 - 41525 - json_to_flat_properties - STEP_START - Started execution of step "json_to_flat_properties".
+Ivy Default Cache set to: /Users/ctac/.ivy2/cache
+The jars for the packages stored in: /Users/ctac/.ivy2/jars
+io.delta#delta-core_2.12 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-45c4279e-c6c1-411d-b9fd-71db24300f59;1.0
+	confs: [default]
+	found io.delta#delta-core_2.12;2.1.0 in central
+	found io.delta#delta-storage;2.1.0 in central
+	found org.antlr#antlr4-runtime;4.8 in central
+	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
+:: resolution report :: resolve 122ms :: artifacts dl 4ms
+	:: modules in use:
+	io.delta#delta-core_2.12;2.1.0 from central in [default]
+	io.delta#delta-storage;2.1.0 from central in [default]
+	org.antlr#antlr4-runtime;4.8 from central in [default]
+	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   4   |   0   |   0   |   0   ||   4   |   0   |
+	---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-45c4279e-c6c1-411d-b9fd-71db24300f59
+	confs: [default]
+	0 artifacts copied, 4 already retrieved (0kB/3ms)
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[32m2023-04-30 15:02:14 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 0b5a246f-5814-4682-a2ac-e8d1d9d02991 - 41525 - json_to_flat_properties - STEP_FAILURE - Execution of step "json_to_flat_properties" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "json_to_flat_properties"::
+
+AttributeError: 'SparkContext' object has no attribute 'conf'
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 177, in json_to_flat_properties
+    df = context.resources.spark_delta._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 85, in _read_json_properties
+    spark = self._get_spark_session()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 62, in _get_spark_session
+    spark.conf.set("spark.hadoop.fs.s3a.endpoint", "localhost:9000")
+    ^^^^^^^^^^
+[0m

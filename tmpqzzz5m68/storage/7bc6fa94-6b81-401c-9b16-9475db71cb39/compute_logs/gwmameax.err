@@ -1,34 +1,0 @@
-[32m2023-04-25 20:36:48 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - 24864 - LOGS_CAPTURED - Started capturing logs in process (pid: 24864).
-[32m2023-04-25 20:36:48 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - 24864 - create_delta_table - STEP_START - Started execution of step "create_delta_table".
-Ivy Default Cache set to: /Users/ctac/.ivy2/cache
-The jars for the packages stored in: /Users/ctac/.ivy2/jars
-io.delta#delta-core_2.12 added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-10c2896c-59cc-4de5-8225-abdb456574c9;1.0
-	confs: [default]
-	found io.delta#delta-core_2.12;2.1.0 in central
-	found io.delta#delta-storage;2.1.0 in central
-	found org.antlr#antlr4-runtime;4.8 in central
-	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
-:: resolution report :: resolve 92ms :: artifacts dl 3ms
-	:: modules in use:
-	io.delta#delta-core_2.12;2.1.0 from central in [default]
-	io.delta#delta-storage;2.1.0 from central in [default]
-	org.antlr#antlr4-runtime;4.8 from central in [default]
-	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
-	---------------------------------------------------------------------
-	|                  |            modules            ||   artifacts   |
-	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
-	---------------------------------------------------------------------
-	|      default     |   4   |   0   |   0   |   0   ||   4   |   0   |
-	---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-10c2896c-59cc-4de5-8225-abdb456574c9
-	confs: [default]
-	0 artifacts copied, 4 already retrieved (0kB/3ms)
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-[Stage 2:=========================================>               (36 + 8) / 50]                                                                                [32m2023-04-25 20:36:56 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - create_delta_table - [Row(id='405151', data_inversa='2022-01-01', dia_semana='sábado', horario='01:35:00', uf='PI', br='316'), Row(id='405158', data_inversa='2022-01-01', dia_semana='sábado', horario='02:40:00', uf='PR', br='116'), Row(id='405172', data_inversa='2022-01-01', dia_semana='sábado', horario='05:22:00', uf='MS', br='163')]
-[32m2023-04-25 20:36:56 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - 24864 - create_delta_table - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
-[32m2023-04-25 20:36:56 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - create_delta_table - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpqzzz5m68/storage/create_delta_table
-[32m2023-04-25 20:36:56 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - 24864 - create_delta_table - ASSET_MATERIALIZATION - Materialized value create_delta_table.
-[32m2023-04-25 20:36:56 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - 24864 - create_delta_table - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
-[32m2023-04-25 20:36:56 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 7bc6fa94-6b81-401c-9b16-9475db71cb39 - 24864 - create_delta_table - STEP_SUCCESS - Finished execution of step "create_delta_table" in 8.2s.
