@@ -2,18 +2,18 @@ from dagster import asset, get_dagster_logger, Output, FileHandle, Definitions
 from bs4 import BeautifulSoup
 from . import helper_functions as hf
 from datetime import datetime
-from minio import Minio, error
 import os
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StructField, StructType, StringType, IntegerType, DoubleType
-import pyspark.sql.functions as F
+from pyspark.sql import  DataFrame, Row
+from pyspark.sql.types import StructField, StructType, StringType, ArrayType
+from pyspark.sql.functions import explode_outer, col
 from delta.tables import DeltaTable
-from delta.pip_utils import configure_spark_with_delta_pip
+#from delta.pip_utils import configure_spark_with_delta_pip
 import pandas as pd
 import pandasql as psql
 import pyspark.pandas as ps
 import pyarrow
 from botocore.exceptions import NoCredentialsError
+from delta.pip_utils import configure_spark_with_delta_pip
 #from minio.error import ResponseError
 
 
@@ -27,7 +27,9 @@ BUCKET_RAW = 'raw'
 
     #group_name="scraping",
     #io_manager_key="io_manager", 
-@asset
+@asset(
+        #io_manager_key="fs_io_manager"
+        )
 def download_pages(context): #-> FileHandle:
     date_today = datetime.today().strftime('%y%m%d')
     last_page_number = hf.get_last_page_number(REALESTATE_BASE_URL, REALESTATE_CITY, REALESTATE_RADIUS)
@@ -58,7 +60,9 @@ def download_pages(context): #-> FileHandle:
 
 
 # TO DO: Change return type to a property dataframe? -> PropertyDataFrame, where to define PropertyDataFrame type?
-@asset
+@asset (
+        #io_manager_key="local_parquet_io_manager"
+        )
 def scrape_pages(context, download_pages):
     dict_ids_prices = {}
     pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
@@ -156,50 +160,83 @@ def upload_to_s3(context):
     
 
 @asset(
-        required_resource_keys={"spark_delta"}
+        required_resource_keys={"spark_delta", "s3"},
+        io_manager_key="local_parquet_io_manager"
 )
-def create_delta_table(context):
-    df = context.resources.spark_delta._read_delta_table()
-    context.log.info(df.head(3))
+def json_to_flat_properties(context) -> DataFrame:
+    """ 
+1. Get all complex (Struct or Array types) on the 1st lvl
+2. Expand 1st lvl Struct fields
+3. Delete 1st lvl expanded struct fields
+4. Explode all 1st lvl Array fields
+5. Check if there are more complex fields left on the next lvl
+6. If yes repeat the procedure until no more complex fields exist
+7. If no more complex fields exist -> return Spark DataFrame
+"""
+    spark_session = context.resources.spark_delta._get_spark_session()
+    df = spark_session.read \
+        .format("json") \
+        .option("compression", "gzip") \
+        .load(context.resources.spark_delta.path_to_raw+"*.gz")
+    
+    context.log.info(f"{df.count()} files were read into a data frame.")
+    
+    complex_fields = dict(
+    [ 
+        (_field.name, _field.dataType) 
+        for _field in df.schema.fields
+        if type(_field.dataType) == ArrayType or type(_field.dataType) == StructType
+    ]
+    )
+  
+    while len(complex_fields) != 0:
+        col_name = list(complex_fields.keys())[0]
 
+    # 2. 1st lvl
+        if type(complex_fields[col_name]) == StructType:
+            expanded_fields = [
+                col(col_name + '.' + k).alias(col_name + '_' + k)
+                for k in [n.name for n in complex_fields[col_name]]
+                ]
+            df = df.select("*", *expanded_fields).drop(col_name) # what does * mean exactly? all elements in the list?
+
+    # if ArrayType then add the Array Elements as Rows using the explode function
+            # i.e. explode Arrays
+        elif type(complex_fields[col_name]) == ArrayType:
+            df = df.withColumn(col_name, explode_outer(col_name))
+
+        complex_fields = dict(
+            [
+                (field.name, field.dataType)
+                for field in df.schema.fields
+                if type(field.dataType) == ArrayType or type(field.dataType) == StructType
+            ]
+        )
+    #print(complex_fields.keys())
+    
+    """df = df \
+        .drop("propertyDetails_images") \
+        .drop("propertyDetails_pdfs") \
+        .drop("propertyDetails_commuteTimes_defaultPois_transportations") \
+        .drop("viewData_viewDataWeb_webView_structuredData")
+    """
+    #context.log.info(os.path.join(context.run_id, context.step_key, context.name))
+    context.log.info(df.count())
+    return df
+    
 
 @asset(
-        required_resource_keys={"spark_delta", "s3"}
+        required_resource_keys={"spark_delta"},
+        io_manager_key="local_parquet_io_manager"
 )
-def json_to_flat_properties(context):
-    spark_session = context.resources.spark_delta._get_spark_session()
-    df = spark_session.read.format('csv').options(header='true', inferSchema='true', delimiter=";").load(f"s3a://{BUCKET_RAW}/datatran2022.csv")
-    context.log.info(df.show())
-    #spark_session.read.format('csv').options(header='true', inferSchema='true').load(f"s3a://{BUCKET_RAW}/")
-    """
-    df_acidentes = (
-    spark_session
-    .read.format("csv")
-    .option("delimiter", ";")
-    .option("header", "true")
-    .option("inferSchema", 'true')
-    .option("encoding", "ISO-8859-1")
-    #.schema(SCHEMA)
-    .load(f"s3a://{BUCKET_RAW}/datatran2022.csv")
-    )
-    context.log.info("File loaded into dataframe")
-    #df = spark_session._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
-    
-    df_zipped = spark_session \
-            .read \
-            .format("json") \
-            .option("compression", "gzip") \
-            .option("header", False) \
-            .load(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
-"""
-    #context.log.info(df_acidentes.show())
-    #s3_client = context.resources.s3._get_s3_client()
-    #endpoint = context.resources.s3.endpoint
+def create_delta_table(context, json_to_flat_properties: DataFrame):
+    #df = context.resources.spark_delta._read_delta_table()
+    df = json_to_flat_properties
+    context.log.info(df.count())
 
-    #objects = s3_client.list_objects(BUCKET_RAW ,recursive=True)
-    #for _obj in objects:    
-     #   context.log.info(_obj.object_name)
-    #df = context.resources.spark_delta._read_json_properties(f"s3a://{BUCKET_RAW}/5659897_230414_zuerich_10km.gz")
-    #context.log.info(df.show(1))
-        #context.log.info(context.resources.s3._get_s3_client.list_objects(BUCKET_RAW, prefix="",recursive=True) )
-    #df = context.resources.spark_delta._read_json_properties()
+    df.write.format("delta")\
+        .mode("overwrite")\
+        .save("s3a://real-estate/lake/bronze/property")
+
+    context.log.info("Data written to the delta table")
+#print(df_acidentes_delta.show(4))

@@ -1,0 +1,33 @@
+[32m2023-05-30 17:41:08 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - cd7a6771-7f0d-4bd8-89ab-f049f0aaf887 - 49852 - LOGS_CAPTURED - Started capturing logs in process (pid: 49852).
+[32m2023-05-30 17:41:08 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - cd7a6771-7f0d-4bd8-89ab-f049f0aaf887 - 49852 - create_delta_table - STEP_START - Started execution of step "create_delta_table".
+[32m2023-05-30 17:41:08 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - cd7a6771-7f0d-4bd8-89ab-f049f0aaf887 - 49852 - create_delta_table - STEP_FAILURE - Execution of step "create_delta_table" failed.
+
+dagster._core.errors.DagsterExecutionLoadInputError: Error occurred while loading input "json_to_flat_properties" of step "create_delta_table"::
+
+pydantic.error_wrappers.ValidationError: 5 validation errors for SparkHelper
+path_to_delta
+  field required (type=value_error.missing)
+path_to_raw
+  field required (type=value_error.missing)
+access_key
+  field required (type=value_error.missing)
+secret_key
+  field required (type=value_error.missing)
+endpoint
+  field required (type=value_error.missing)
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/inputs.py", line 819, in _load_input_with_input_manager
+    value = input_manager.load_input(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 107, in load_input
+    spark = SparkHelper()._get_spark_session
+            ^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_config/pythonic_config/__init__.py", line 607, in __init__
+    Config.__init__(self, **{**data_without_resources, **resource_pointers})
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_config/pythonic_config/__init__.py", line 188, in __init__
+    super().__init__(**modified_data)
+  File "pydantic/main.py", line 341, in pydantic.main.BaseModel.__init__
+[0m

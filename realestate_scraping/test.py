@@ -2,16 +2,15 @@ from dagster import Definitions, ConfigurableResource, EnvVar
 import os
 from dagster_aws.s3 import s3_resource
 from minio import Minio
-from pyspark.sql import SparkSession
 from delta.pip_utils import configure_spark_with_delta_pip
+import pyspark
 #from .assets import core_assets
 #import pyspark
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StructField, StructType, StringType, IntegerType, DoubleType
-import pyspark
+from pyspark.sql.types import ArrayType, StructType, StringType, IntegerType, DoubleType
+from pyspark.sql.functions import col, explode_outer
 
-from pyspark import SparkConf
-from pyspark.sql import SparkSession
+#from pyspark import SparkConf
+#from pyspark.sql import SparkSession
 
 
 """
@@ -37,24 +36,11 @@ builder = pyspark.sql.SparkSession.builder.appName("MyApp") \
     .config('spark.hadoop.fs.s3a.endpoint', "localhost:9000") \
     .config("spark.hadoop.fs.s3a.path.style.access", True) \
     .config('spark.hadoop.fs.s3a.connection.ssl.enabled', "false") \
-    #.config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
-    #.config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-
-# works well 
-#spark = SparkSession.builder.config(conf=conf).getOrCreate()
-
-#spark = configure_spark_with_delta_pip(spark).getOrCreate()
+  
 my_packages = ["org.apache.hadoop:hadoop-aws:3.3.2"]
 spark = configure_spark_with_delta_pip(builder, extra_packages=my_packages).getOrCreate()
 
-#my_packages = ["org.apache.hadoop:hadoop-aws:3.3.1"]
-#spark = configure_spark_with_delta_pip(builder, extra_packages=my_packages).getOrCreate()
-
-#print(f"Spark version = {spark.version}")
-
-# hadoop
-#print(f"Hadoop version = {spark._jvm.org.apache.hadoop.util.VersionInfo.getVersion()}")
-
+"""
 SCHEMA = StructType(
     [
         StructField('id', StringType(), True),          # ACCIDENT ID
@@ -66,11 +52,111 @@ SCHEMA = StructType(
         # AND OTHER FIELDS OMITTED TO MAKE THIS CODE BLOCK SMALL
     ]
 )
+"""
 
-path_to_delta = (f"s3a://raw/datatran2022.csv")
+df_json = spark.read.format("json") \
+    .option("multiLine", "true") \
+    .load("./realestate_scraping/json_example.json")
+#df_json.show()
+#df_json.printSchema()
+#print(df_json.schema.fields)
+complex_fields = dict(
+    [
+    (_field.name, _field.dataType) 
+    for _field in df_json.schema.fields 
+    if (type(_field.dataType) == ArrayType or type(_field.dataType) == StructType)
+    ]
+)
 
+print(complex_fields)
+
+col_name = list(complex_fields.keys())[0]
+print(col_name)
+if type(complex_fields[col_name]) == StructType:
+    expanded = [
+                    col(col_name + '.' + k).alias(col_name + '_' + k)
+                    for k in [n.name for n in complex_fields[col_name]]
+                ]
+    df_json = df_json.select("*", *expanded).drop(col_name)
+    print(expanded)
+#while len(complex_fields) != 0:
+
+#    col_name = list(complex_fields.keys())[0]
+#   if type(complex_fields[col_name]) == StructType:
+#                expanded = [
+#                   col(col_name + '.' + k).alias(col_name + '_' + k)
+#                    for k in [n.name for n in complex_fields[col_name]]
+#                ]
+#                df = df.select("*", *expanded).drop(col_name)
+
+            # if ArrayType then add the Array Elements as Rows using the explode function
+            # i.e. explode Arrays
+#    elif type(complex_fields[col_name]) == ArrayType:
+#                df = df.withColumn(col_name, explode_outer(col_name))
+
+"""
+path_to_file = (f"s3a://raw/5659897_230414_zuerich_10km.gz")
+
+df_zipped = spark \
+    .read \
+    .format("json") \
+    .option("compression", "gzip") \
+    .load(path_to_file)
+
+#print(df_zipped.printSchema())
+#print(df_zipped.show(1))
+
+complex_fields = dict(
+        [
+            (field.name, field.dataType)
+            for field in df_zipped.schema.fields
+            if (type(field.dataType) == ArrayType or type(field.dataType) == StructType)
+            and field.name.startswith('propertyDetails')
+        ]
+    )
+
+print(complex_fields)
+
+while len(complex_fields) != 0:
+
+        col_name = list(complex_fields.keys())[0]
+        print(
+            "Processing :" + col_name + " Type : " + str(type(complex_fields[col_name]))
+        )
+
+       
+            # if StructType then convert all sub element to columns.
+            # i.e. flatten structs
+        if type(complex_fields[col_name]) == StructType:
+                expanded = [
+                    col(col_name + '.' + k).alias(col_name + '_' + k)
+                    for k in [n.name for n in complex_fields[col_name]]
+                ]
+                df_zipped = df_zipped.select("*", *expanded).drop(col_name)
+
+            # if ArrayType then add the Array Elements as Rows using the explode function
+            # i.e. explode Arrays
+        elif type(complex_fields[col_name]) == ArrayType:
+                df_zipped = df_zipped.withColumn(col_name, explode_outer(col_name))
+
+        # recompute remaining Complex Fields in Schema
+        complex_fields = dict(
+            [
+                (field.name, field.dataType)
+                for field in df_zipped.schema.fields
+                if type(field.dataType) == ArrayType or type(field.dataType) == StructType
+            ]
+        )
+        print(
+            'count of rows, in case of no errors, count should stay the same. Count: '
+            + str(df_zipped.count())
+        )
+
+df_zipped.show(1, False)
+"""
 
 ## Read a .csv file into spark dataframe
+"""
 df_acidentes = (
     spark
     .read.format("csv")
@@ -80,12 +166,23 @@ df_acidentes = (
     .schema(SCHEMA)
   .load("s3a://raw/datatran2022.csv")
 )
-#print(df_acidentes.show(10))
+"""
     
 ## Creating a Delta table from a PySpark dataframe
-df_acidentes\
-    .write.format("delta")\
-    .mode("overwrite")\
-    .save("s3a://real-estate/lake/bronze/property")
+#df_acidentes\
+#    .write.format("delta")\
+#    .mode("overwrite")\
+#    .save("s3a://real-estate/lake/bronze/property")
+
+
+## Reading a Delta table to a PySpark dataframe
+#df_acidentes_delta = (
+#    spark
+#    .read.format("delta")
+#    .load("s3a://real-estate/lake/bronze/property")
+#)
+
+#print(df_acidentes_delta.show(4))
+
 
 

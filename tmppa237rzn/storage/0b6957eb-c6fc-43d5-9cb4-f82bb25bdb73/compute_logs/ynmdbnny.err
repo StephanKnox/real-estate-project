@@ -1,0 +1,27 @@
+[32m2023-05-30 17:45:49 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - 50104 - LOGS_CAPTURED - Started capturing logs in process (pid: 50104).
+[32m2023-05-30 17:45:49 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - 50104 - create_delta_table - STEP_START - Started execution of step "create_delta_table".
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[Stage 0:>                                                          (0 + 1) / 1]                                                                                [32m2023-05-30 17:45:54 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - 50104 - create_delta_table - LOADED_INPUT - Loaded input "json_to_flat_properties" using input manager "local_parquet_io_manager"
+[32m2023-05-30 17:45:54 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - 50104 - create_delta_table - STEP_INPUT - Got input "json_to_flat_properties" of type "DataFrame". (Type check passed).
+[32m2023-05-30 17:45:55 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - create_delta_table - 19344
+[32m2023-05-30 17:45:55 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - 50104 - create_delta_table - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2023-05-30 17:45:55 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 0b6957eb-c6fc-43d5-9cb4-f82bb25bdb73 - 50104 - create_delta_table - STEP_FAILURE - Execution of step "create_delta_table" failed.
+
+dagster._core.errors.DagsterExecutionHandleOutputError: Error occurred while handling output "result" of step "create_delta_table"::
+
+AttributeError: 'NoneType' object has no attribute 'write'
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/execute_step.py", line 591, in _gen_fn
+    gen_output = output_manager.handle_output(output_context, output.value)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 114, in handle_output
+    obj.write.parquet('./data')
+    ^^^^^^^^^
+[0m

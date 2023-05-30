@@ -1,0 +1,72 @@
+[32m2023-05-30 18:04:42 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - a207c44c-23e1-4e94-9771-dfd76f18df60 - 51098 - LOGS_CAPTURED - Started capturing logs in process (pid: 51098).
+[32m2023-05-30 18:04:42 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - a207c44c-23e1-4e94-9771-dfd76f18df60 - 51098 - create_delta_table - STEP_START - Started execution of step "create_delta_table".
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[32m2023-05-30 18:04:46 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - a207c44c-23e1-4e94-9771-dfd76f18df60 - 51098 - create_delta_table - LOADED_INPUT - Loaded input "json_to_flat_properties" using input manager "local_parquet_io_manager"
+[32m2023-05-30 18:04:46 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - a207c44c-23e1-4e94-9771-dfd76f18df60 - 51098 - create_delta_table - STEP_INPUT - Got input "json_to_flat_properties" of type "DataFrame". (Type check passed).
+[32m2023-05-30 18:04:47 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - a207c44c-23e1-4e94-9771-dfd76f18df60 - create_delta_table - 19344
+[32m2023-05-30 18:04:47 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - a207c44c-23e1-4e94-9771-dfd76f18df60 - 51098 - create_delta_table - STEP_FAILURE - Execution of step "create_delta_table" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "create_delta_table"::
+
+py4j.protocol.Py4JJavaError: An error occurred while calling o30.save.
+: java.lang.ClassNotFoundException: 
+Failed to find data source: delta. Please find packages at
+https://spark.apache.org/third-party-projects.html
+       
+	at org.apache.spark.sql.errors.QueryExecutionErrors$.failedToFindDataSourceError(QueryExecutionErrors.scala:587)
+	at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:675)
+	at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSourceV2(DataSource.scala:725)
+	at org.apache.spark.sql.DataFrameWriter.lookupV2Provider(DataFrameWriter.scala:864)
+	at org.apache.spark.sql.DataFrameWriter.saveInternal(DataFrameWriter.scala:256)
+	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:239)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)
+	at py4j.Gateway.invoke(Gateway.java:282)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+Caused by: java.lang.ClassNotFoundException: delta.DefaultSource
+	at java.base/java.net.URLClassLoader.findClass(URLClassLoader.java:476)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:589)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:522)
+	at org.apache.spark.sql.execution.datasources.DataSource$.$anonfun$lookupDataSource$5(DataSource.scala:661)
+	at scala.util.Try$.apply(Try.scala:213)
+	at org.apache.spark.sql.execution.datasources.DataSource$.$anonfun$lookupDataSource$4(DataSource.scala:661)
+	at scala.util.Failure.orElse(Try.scala:224)
+	at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:661)
+	... 16 more
+
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 238, in create_delta_table
+    .save("s3a://real-estate/lake/bronze/property")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/pyspark/sql/readwriter.py", line 968, in save
+    self._jwrite.save(path)
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/py4j/java_gateway.py", line 1321, in __call__
+    return_value = get_return_value(
+                   ^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/pyspark/sql/utils.py", line 190, in deco
+    return f(*a, **kw)
+           ^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/py4j/protocol.py", line 326, in get_return_value
+    raise Py4JJavaError(
+[0m
