@@ -1,41 +1,0 @@
-[32m2023-05-30 18:03:30 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - 50930 - LOGS_CAPTURED - Started capturing logs in process (pid: 50930).
-[32m2023-05-30 18:03:30 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - 50930 - json_to_flat_properties - STEP_START - Started execution of step "json_to_flat_properties".
-Ivy Default Cache set to: /Users/ctac/.ivy2/cache
-The jars for the packages stored in: /Users/ctac/.ivy2/jars
-io.delta#delta-core_2.12 added as a dependency
-org.apache.hadoop#hadoop-aws added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-37b886f6-d2ff-4414-a937-8931982d7020;1.0
-	confs: [default]
-	found io.delta#delta-core_2.12;2.1.0 in central
-	found io.delta#delta-storage;2.1.0 in central
-	found org.antlr#antlr4-runtime;4.8 in central
-	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
-	found org.apache.hadoop#hadoop-aws;3.3.2 in central
-	found com.amazonaws#aws-java-sdk-bundle;1.11.1026 in central
-	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
-:: resolution report :: resolve 132ms :: artifacts dl 5ms
-	:: modules in use:
-	com.amazonaws#aws-java-sdk-bundle;1.11.1026 from central in [default]
-	io.delta#delta-core_2.12;2.1.0 from central in [default]
-	io.delta#delta-storage;2.1.0 from central in [default]
-	org.antlr#antlr4-runtime;4.8 from central in [default]
-	org.apache.hadoop#hadoop-aws;3.3.2 from central in [default]
-	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
-	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
-	---------------------------------------------------------------------
-	|                  |            modules            ||   artifacts   |
-	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
-	---------------------------------------------------------------------
-	|      default     |   7   |   0   |   0   |   0   ||   7   |   0   |
-	---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-37b886f6-d2ff-4414-a937-8931982d7020
-	confs: [default]
-	0 artifacts copied, 7 already retrieved (0kB/3ms)
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-[Stage 0:>                                                        (0 + 8) / 744][Stage 0:====>                                                   (66 + 8) / 744][Stage 0:===========>                                           (151 + 8) / 744][Stage 0:=================>                                     (240 + 8) / 744][Stage 0:========================>                              (329 + 8) / 744][Stage 0:==============================>                        (411 + 9) / 744][Stage 0:====================================>                  (500 + 8) / 744][Stage 0:============================================>          (601 + 8) / 744][Stage 0:===================================================>  (704 + 10) / 744]                                                                                [Stage 1:=====================>                                 (296 + 8) / 744][Stage 1:===============================>                       (430 + 8) / 744][Stage 1:========================================>              (552 + 8) / 744][Stage 1:==================================================>    (678 + 9) / 744]                                                                                [Stage 2:===================>                                      (8 + 8) / 24]                                                                                [32m2023-05-30 18:03:41 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - json_to_flat_properties - 744 files were read into a data frame.
-[Stage 6:===================>                                      (8 + 8) / 24][Stage 6:=============================================>           (19 + 5) / 24]                                                                                [32m2023-05-30 18:03:44 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - json_to_flat_properties - 19344
-[32m2023-05-30 18:03:44 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - 50930 - json_to_flat_properties - STEP_OUTPUT - Yielded output "result" of type "DataFrame". (Type check passed).
-[Stage 9:>                                                         (0 + 8) / 24][Stage 9:===================>                                      (8 + 8) / 24][Stage 9:==========================>                              (11 + 8) / 24][Stage 9:======================================>                  (16 + 8) / 24][Stage 9:========================================>                (17 + 7) / 24]                                                                                [32m2023-05-30 18:03:49 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - 50930 - json_to_flat_properties - ASSET_MATERIALIZATION - Materialized value json_to_flat_properties.
-[32m2023-05-30 18:03:49 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - 50930 - json_to_flat_properties - HANDLED_OUTPUT - Handled output "result" using IO manager "local_parquet_io_manager"
-[32m2023-05-30 18:03:49 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aa0cd87a-4b4e-438d-9680-0f6eedacc3c7 - 50930 - json_to_flat_properties - STEP_SUCCESS - Finished execution of step "json_to_flat_properties" in 19.53s.

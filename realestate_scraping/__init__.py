@@ -62,7 +62,8 @@ class SparkHelper(ConfigurableResource):
         .config('spark.hadoop.fs.s3a.endpoint', self.endpoint) \
         .config("spark.hadoop.fs.s3a.path.style.access", True) \
         .config('spark.hadoop.fs.s3a.connection.ssl.enabled', "false") \
-  
+        .enableHiveSupport()
+        
         my_packages = ["org.apache.hadoop:hadoop-aws:3.3.2"]
         spark = configure_spark_with_delta_pip(builder, extra_packages=my_packages).getOrCreate()
 
@@ -104,28 +105,56 @@ class SparkHelper(ConfigurableResource):
         return spark.read.parquet('./data')
 
 
-class LocalParquetIOManager(IOManager):    
+class LocalParquetIOManager(ConfigurableIOManager):    
+    path_to_delta: str
+    path_to_raw: str
+    #s3 : S3Credentials()
+    access_key: str
+    secret_key: str
+    endpoint: str
+
+
+    def _get_spark_session(self):
+        builder = pyspark.sql.SparkSession.builder.appName("RealEstateApp") \
+        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
+        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+        .config('spark.hadoop.fs.s3a.access.key', self.access_key)  \
+        .config('spark.hadoop.fs.s3a.secret.key', self.secret_key)  \
+        .config('spark.hadoop.fs.s3a.endpoint', self.endpoint) \
+        .config("spark.hadoop.fs.s3a.path.style.access", True) \
+        .config('spark.hadoop.fs.s3a.connection.ssl.enabled', "false") \
+        .enableHiveSupport()
+        my_packages = ["org.apache.hadoop:hadoop-aws:3.3.2"]
+        spark = configure_spark_with_delta_pip(builder, extra_packages=my_packages).getOrCreate()
+
+        return spark
     # TO chage
     def _get_path(self, context):
         return os.path.join(context.run_id, context.step_key, context.name)
         
     # TO change    
     def handle_output(self, context, obj):
+        #session = SparkHelper()
+        #spark = session._get_spark_session()
+        
         #obj.write.parquet(self._get_path(context))
         obj.write.mode("overwrite").parquet('./data')
 
     # TO change
     def load_input(self, context):
-        spark = SparkSession.builder.getOrCreate()#SparkHelper()._get_spark_session
+        #spark = SparkSession.builder.getOrCreate()#SparkHelper()._get_spark_session
         #return spark.read.parquet(self._get_path(context.upstream_output))
-        return spark.read.parquet('./data')
+        spark_delta = self._get_spark_session()
+
+        return spark_delta.read.parquet('./data')
 #deployment_name = os.environ.get("DAGSTER_DEPLOYMENT", "local")
 
 
 
 @io_manager
 def local_parquet_io_manager():
-    return LocalParquetIOManager(IOManager)
+    return LocalParquetIOManager(ConfigurableIOManager)
 
 defs = Definitions(
     assets=all_assets,
@@ -143,7 +172,13 @@ defs = Definitions(
             path_to_delta=EnvVar("DELTA_TABLE_PATH"),
             path_to_raw=EnvVar("MINIO_RAW_BUCKET")
         ),
-        "local_parquet_io_manager": LocalParquetIOManager()
+        "local_parquet_io_manager": LocalParquetIOManager(
+            access_key=EnvVar("MINIO_ACCESS_KEY"),
+            secret_key=EnvVar("MINIO_SECRET_KEY"),
+            endpoint=EnvVar("MINIO_ENDPOINT"),
+            path_to_delta=EnvVar("DELTA_TABLE_PATH"),
+            path_to_raw=EnvVar("MINIO_RAW_BUCKET")
+            )
         #"fs_io_manager": io_manager()
     },
 )

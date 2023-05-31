@@ -1,0 +1,3 @@
+:: loading settings :: url = jar:file:/opt/homebrew/Cellar/apache-spark/3.3.1/libexec/jars/ivy-2.5.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+23/05/31 12:29:49 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+23/05/31 12:29:55 WARN ResolveSessionCatalog: A Hive serde table will be created as there is no table provider specified. You can set spark.sql.legacy.createHiveTableByDefault to false so that native data source table will be created instead.

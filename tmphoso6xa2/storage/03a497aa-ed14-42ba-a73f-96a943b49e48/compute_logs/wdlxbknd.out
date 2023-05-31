@@ -1,0 +1,13 @@
+:: loading settings :: url = jar:file:/opt/homebrew/Cellar/apache-spark/3.3.1/libexec/jars/ivy-2.5.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+23/05/31 12:32:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+23/05/31 12:32:09 WARN HiveConf: HiveConf of name hive.stats.jdbc.timeout does not exist
+23/05/31 12:32:09 WARN HiveConf: HiveConf of name hive.stats.retries.wait does not exist
+23/05/31 12:32:10 WARN ObjectStore: Version information not found in metastore. hive.metastore.schema.verification is not enabled so recording the schema version 2.3.0
+23/05/31 12:32:10 WARN ObjectStore: setMetaStoreSchemaVersion called but recording version is disabled: version = 2.3.0, comment = Set by MetaStore ctac@192.168.0.24
+23/05/31 12:32:10 WARN ObjectStore: Failed to get database default, returning NoSuchObjectException
+23/05/31 12:32:11 WARN ObjectStore: Failed to get database realestate, returning NoSuchObjectException
+23/05/31 12:32:11 WARN ObjectStore: Failed to get database realestate, returning NoSuchObjectException
+23/05/31 12:32:11 WARN ObjectStore: Failed to get database global_temp, returning NoSuchObjectException
+23/05/31 12:32:11 WARN ObjectStore: Failed to get database realestate, returning NoSuchObjectException
+23/05/31 12:32:11 WARN ResolveSessionCatalog: A Hive serde table will be created as there is no table provider specified. You can set spark.sql.legacy.createHiveTableByDefault to false so that native data source table will be created instead.
+23/05/31 12:32:11 WARN SessionState: METASTORE_FILTER_HOOK will be ignored, since hive.security.authorization.manager is set to instance of HiveAuthorizerFactory.

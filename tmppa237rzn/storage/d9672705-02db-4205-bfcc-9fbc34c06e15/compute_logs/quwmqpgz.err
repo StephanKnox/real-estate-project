@@ -1,118 +1,0 @@
-[32m2023-05-30 17:35:42 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - d9672705-02db-4205-bfcc-9fbc34c06e15 - 49448 - LOGS_CAPTURED - Started capturing logs in process (pid: 49448).
-[32m2023-05-30 17:35:42 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - d9672705-02db-4205-bfcc-9fbc34c06e15 - 49448 - json_to_flat_properties - STEP_START - Started execution of step "json_to_flat_properties".
-Ivy Default Cache set to: /Users/ctac/.ivy2/cache
-The jars for the packages stored in: /Users/ctac/.ivy2/jars
-io.delta#delta-core_2.12 added as a dependency
-org.apache.hadoop#hadoop-aws added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-18d5235e-104d-4f9b-8c0e-faf31b1bb573;1.0
-	confs: [default]
-	found io.delta#delta-core_2.12;2.1.0 in central
-	found io.delta#delta-storage;2.1.0 in central
-	found org.antlr#antlr4-runtime;4.8 in central
-	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
-	found org.apache.hadoop#hadoop-aws;3.3.2 in central
-	found com.amazonaws#aws-java-sdk-bundle;1.11.1026 in central
-	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
-:: resolution report :: resolve 135ms :: artifacts dl 5ms
-	:: modules in use:
-	com.amazonaws#aws-java-sdk-bundle;1.11.1026 from central in [default]
-	io.delta#delta-core_2.12;2.1.0 from central in [default]
-	io.delta#delta-storage;2.1.0 from central in [default]
-	org.antlr#antlr4-runtime;4.8 from central in [default]
-	org.apache.hadoop#hadoop-aws;3.3.2 from central in [default]
-	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
-	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
-	---------------------------------------------------------------------
-	|                  |            modules            ||   artifacts   |
-	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
-	---------------------------------------------------------------------
-	|      default     |   7   |   0   |   0   |   0   ||   7   |   0   |
-	---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-18d5235e-104d-4f9b-8c0e-faf31b1bb573
-	confs: [default]
-	0 artifacts copied, 7 already retrieved (0kB/4ms)
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-[Stage 0:==>                                                     (29 + 8) / 744][Stage 0:======>                                                 (92 + 8) / 744][Stage 0:=============>                                         (177 + 9) / 744][Stage 0:===================>                                  (272 + 11) / 744][Stage 0:==========================>                            (354 + 8) / 744][Stage 0:===============================>                       (424 + 8) / 744][Stage 0:======================================>                (520 + 9) / 744][Stage 0:==============================================>        (630 + 8) / 744]                                                                                [Stage 1:===========================>                           (366 + 8) / 744][Stage 1:==================================>                    (473 + 8) / 744][Stage 1:============================================>          (600 + 8) / 744][Stage 1:=====================================================> (727 + 9) / 744]                                                                                [Stage 2:========================================>                (17 + 7) / 24]                                                                                [32m2023-05-30 17:35:53 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - d9672705-02db-4205-bfcc-9fbc34c06e15 - json_to_flat_properties - 744 files were read into a data frame.
-[32m2023-05-30 17:35:56 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - d9672705-02db-4205-bfcc-9fbc34c06e15 - json_to_flat_properties - 19344
-[32m2023-05-30 17:35:56 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - d9672705-02db-4205-bfcc-9fbc34c06e15 - 49448 - json_to_flat_properties - STEP_OUTPUT - Yielded output "result" of type "DataFrame". (Type check passed).
-[32m2023-05-30 17:35:56 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - d9672705-02db-4205-bfcc-9fbc34c06e15 - 49448 - json_to_flat_properties - STEP_FAILURE - Execution of step "json_to_flat_properties" failed.
-
-dagster._core.errors.DagsterExecutionHandleOutputError: Error occurred while handling output "result" of step "json_to_flat_properties"::
-
-pyspark.sql.utils.AnalysisException: path file:/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping already exists.
-
-Stack Trace:
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
-    yield
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
-    next_output = next(iterator)
-                  ^^^^^^^^^^^^^^
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/execute_step.py", line 591, in _gen_fn
-    gen_output = output_manager.handle_output(output_context, output.value)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 103, in handle_output
-    obj.write.parquet('./')
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/pyspark/sql/readwriter.py", line 1140, in parquet
-    self._jwrite.parquet(path)
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/py4j/java_gateway.py", line 1321, in __call__
-    return_value = get_return_value(
-                   ^^^^^^^^^^^^^^^^^
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/pyspark/sql/utils.py", line 196, in deco
-    raise converted from None
-
-The above exception occurred during handling of the following exception:
-py4j.protocol.Py4JJavaError: An error occurred while calling o799.parquet.
-: org.apache.spark.sql.AnalysisException: path file:/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping already exists.
-	at org.apache.spark.sql.errors.QueryCompilationErrors$.outputPathAlreadyExistsError(QueryCompilationErrors.scala:1175)
-	at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:120)
-	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:113)
-	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:111)
-	at org.apache.spark.sql.execution.command.DataWritingCommandExec.executeCollect(commands.scala:125)
-	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.$anonfun$applyOrElse$1(QueryExecution.scala:98)
-	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$6(SQLExecution.scala:109)
-	at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:169)
-	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:95)
-	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:779)
-	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:64)
-	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:98)
-	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:94)
-	at org.apache.spark.sql.catalyst.trees.TreeNode.$anonfun$transformDownWithPruning$1(TreeNode.scala:584)
-	at org.apache.spark.sql.catalyst.trees.CurrentOrigin$.withOrigin(TreeNode.scala:176)
-	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDownWithPruning(TreeNode.scala:584)
-	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.org$apache$spark$sql$catalyst$plans$logical$AnalysisHelper$$super$transformDownWithPruning(LogicalPlan.scala:30)
-	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning(AnalysisHelper.scala:267)
-	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning$(AnalysisHelper.scala:263)
-	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:30)
-	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:30)
-	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDown(TreeNode.scala:560)
-	at org.apache.spark.sql.execution.QueryExecution.eagerlyExecuteCommands(QueryExecution.scala:94)
-	at org.apache.spark.sql.execution.QueryExecution.commandExecuted$lzycompute(QueryExecution.scala:81)
-	at org.apache.spark.sql.execution.QueryExecution.commandExecuted(QueryExecution.scala:79)
-	at org.apache.spark.sql.execution.QueryExecution.assertCommandExecuted(QueryExecution.scala:116)
-	at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:860)
-	at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:390)
-	at org.apache.spark.sql.DataFrameWriter.saveInternal(DataFrameWriter.scala:363)
-	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:239)
-	at org.apache.spark.sql.DataFrameWriter.parquet(DataFrameWriter.scala:793)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
-	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)
-	at py4j.Gateway.invoke(Gateway.java:282)
-	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
-	at py4j.commands.CallCommand.execute(CallCommand.java:79)
-	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
-	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-
-
-Stack Trace:
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/pyspark/sql/utils.py", line 190, in deco
-    return f(*a, **kw)
-           ^^^^^^^^^^^
-  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/py4j/protocol.py", line 326, in get_return_value
-    raise Py4JJavaError(
-[0m

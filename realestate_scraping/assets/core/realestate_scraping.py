@@ -214,12 +214,12 @@ def json_to_flat_properties(context) -> DataFrame:
         )
     #print(complex_fields.keys())
     
-    """df = df \
+    df = df \
         .drop("propertyDetails_images") \
         .drop("propertyDetails_pdfs") \
         .drop("propertyDetails_commuteTimes_defaultPois_transportations") \
         .drop("viewData_viewDataWeb_webView_structuredData")
-    """
+    
     #context.log.info(os.path.join(context.run_id, context.step_key, context.name))
     context.log.info(df.count())
     return df
@@ -234,9 +234,27 @@ def create_delta_table(context, json_to_flat_properties: DataFrame):
     df = json_to_flat_properties
     context.log.info(df.count())
 
-    df.write.format("delta")\
-        .mode("overwrite")\
-        .save("s3a://real-estate/lake/bronze/property")
+    spark_session = context.resources.spark_delta._get_spark_session()
+    spark_session.sql("""CREATE DATABASE IF NOT EXISTS realestate""")
+    spark_session.sql("""DROP TABLE IF EXISTS realestate.property""")
+    ##spark_session.sql("""
+    ##    CREATE TABLE IF NOT EXISTS {}.{}
+    ##    USING DELTA
+    ##    LOCATION "{}"
+    ##    """)
+    
+    #spark_session.sql("""DROP TABLE IF EXISTS 's3a://real-estate/lake/bronze/property'""")
+    ##df.write.format("delta")\
+    ##    .mode("overwrite")\
+    ##    .option("mergeSchema", "true") \
+    ##    .save("s3a://real-estate/lake/bronze/property")
+    df_delta = spark_session.read.format("delta") \
+        .load("s3a://real-estate/lake/bronze/property")
 
-    context.log.info("Data written to the delta table")
+    context.log.info(f"Schema of the delta table: \n{df_delta.select('*').take(2)}")
 #print(df_acidentes_delta.show(4))
+
+
+@asset()
+def merge_delta(context):
+    pass

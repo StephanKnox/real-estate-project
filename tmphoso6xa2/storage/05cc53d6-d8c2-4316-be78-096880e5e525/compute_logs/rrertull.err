@@ -1,0 +1,41 @@
+[32m2023-05-31 12:37:06 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - 56173 - LOGS_CAPTURED - Started capturing logs in process (pid: 56173).
+[32m2023-05-31 12:37:06 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - 56173 - json_to_flat_properties - STEP_START - Started execution of step "json_to_flat_properties".
+Ivy Default Cache set to: /Users/ctac/.ivy2/cache
+The jars for the packages stored in: /Users/ctac/.ivy2/jars
+io.delta#delta-core_2.12 added as a dependency
+org.apache.hadoop#hadoop-aws added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-d208e376-2788-4258-9900-a992eaa22ba8;1.0
+	confs: [default]
+	found io.delta#delta-core_2.12;2.1.0 in central
+	found io.delta#delta-storage;2.1.0 in central
+	found org.antlr#antlr4-runtime;4.8 in central
+	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
+	found org.apache.hadoop#hadoop-aws;3.3.2 in central
+	found com.amazonaws#aws-java-sdk-bundle;1.11.1026 in central
+	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+:: resolution report :: resolve 138ms :: artifacts dl 5ms
+	:: modules in use:
+	com.amazonaws#aws-java-sdk-bundle;1.11.1026 from central in [default]
+	io.delta#delta-core_2.12;2.1.0 from central in [default]
+	io.delta#delta-storage;2.1.0 from central in [default]
+	org.antlr#antlr4-runtime;4.8 from central in [default]
+	org.apache.hadoop#hadoop-aws;3.3.2 from central in [default]
+	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
+	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   7   |   0   |   0   |   0   ||   7   |   0   |
+	---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-d208e376-2788-4258-9900-a992eaa22ba8
+	confs: [default]
+	0 artifacts copied, 7 already retrieved (0kB/4ms)
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[Stage 0:>                                                        (0 + 8) / 744][Stage 0:====>                                                   (65 + 8) / 744][Stage 0:==========>                                            (148 + 9) / 744][Stage 0:=================>                                     (232 + 8) / 744][Stage 0:========================>                              (325 + 8) / 744][Stage 0:==============================>                        (415 + 8) / 744][Stage 0:======================================>                (515 + 8) / 744][Stage 0:=============================================>         (611 + 8) / 744][Stage 0:====================================================>  (713 + 8) / 744]                                                                                [Stage 1:===================>                                   (262 + 8) / 744][Stage 1:==========================>                           (361 + 11) / 744][Stage 1:==================================>                    (464 + 8) / 744][Stage 1:========================================>             (558 + 10) / 744][Stage 1:=================================================>     (671 + 8) / 744]                                                                                [Stage 2:===================>                                      (8 + 8) / 24][Stage 2:======================================>                  (16 + 8) / 24]                                                                                [Stage 3:======================================>                  (16 + 8) / 24]                                                                                [32m2023-05-31 12:37:19 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - json_to_flat_properties - 744 files were read into a data frame.
+[Stage 6:===================>                                      (8 + 8) / 24][Stage 6:========================================>                (17 + 7) / 24]                                                                                [32m2023-05-31 12:37:22 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - json_to_flat_properties - 19344
+[32m2023-05-31 12:37:22 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - 56173 - json_to_flat_properties - STEP_OUTPUT - Yielded output "result" of type "DataFrame". (Type check passed).
+[Stage 9:>                                                         (0 + 8) / 24][Stage 9:================>                                         (7 + 8) / 24][Stage 9:===================>                                      (8 + 8) / 24][Stage 9:=====================>                                    (9 + 8) / 24][Stage 9:======================================>                  (16 + 8) / 24][Stage 9:========================================>                (17 + 7) / 24]                                                                                [32m2023-05-31 12:37:28 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - 56173 - json_to_flat_properties - ASSET_MATERIALIZATION - Materialized value json_to_flat_properties.
+[32m2023-05-31 12:37:28 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - 56173 - json_to_flat_properties - HANDLED_OUTPUT - Handled output "result" using IO manager "local_parquet_io_manager"
+[32m2023-05-31 12:37:28 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05cc53d6-d8c2-4316-be78-096880e5e525 - 56173 - json_to_flat_properties - STEP_SUCCESS - Finished execution of step "json_to_flat_properties" in 21.58s.
