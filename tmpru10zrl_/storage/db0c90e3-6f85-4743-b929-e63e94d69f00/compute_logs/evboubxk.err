@@ -1,0 +1,32 @@
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - 59436 - LOGS_CAPTURED - Started capturing logs in process (pid: 59436).
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - 59436 - scrape_pages - STEP_START - Started execution of step "scrape_pages".
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - scrape_pages - Loading file from: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpru10zrl_/storage/download_pages
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - 59436 - scrape_pages - ASSET_OBSERVATION - DagsterEventType.ASSET_OBSERVATION for step scrape_pages
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - 59436 - scrape_pages - LOADED_INPUT - Loaded input "download_pages" using input manager "io_manager"
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - 59436 - scrape_pages - STEP_INPUT - Got input "download_pages" of type "Any". (Type check passed).
+[32m2023-05-31 14:54:18 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - db0c90e3-6f85-4743-b929-e63e94d69f00 - 59436 - scrape_pages - STEP_FAILURE - Execution of step "scrape_pages" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "scrape_pages"::
+
+FileNotFoundError: [Errno 2] No such file or directory: '230531_real_estate_data_zuerich_1_km_part_5.html'
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 68, in scrape_pages
+    pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/helper_functions.py", line 86, in get_pages_from_local
+    if os.path.getctime(_file) == today:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen genericpath>", line 65, in getctime
+[0m

@@ -5,13 +5,14 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import os
+import datetime as dt
 
 
 class SQL:
     def __init__(self, sql, **bindings):
         self.sql = sql
         self.bindings = bindings
-        
+
 
 def init_webdriver():
     options = webdriver.ChromeOptions()
@@ -77,8 +78,12 @@ def get_last_page_number(REALESTATE_BASE_URL, REALESTATE_CITY, REALESTATE_RADIUS
 
 
 def get_pages_from_local(LOCAL_PATH):
-   files_list = []
-   for root, directories, files in os.walk(LOCAL_PATH):
-       for _file in files:
-           files_list.append(os.path.join(root, _file))
-   return files_list
+    files_list = []
+    today = dt.datetime.now().date()
+  
+    for root, directories, files in os.walk(LOCAL_PATH):
+        for _file in files:
+            filetime = dt.datetime.fromtimestamp(os.path.getctime(os.path.join(root, _file)))
+            if filetime.date() == today:
+                files_list.append(os.path.join(root, _file))
+    return files_list

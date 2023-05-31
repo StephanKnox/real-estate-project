@@ -1,0 +1,25 @@
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - LOGS_CAPTURED - Started capturing logs in process (pid: 58761).
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - STEP_START - Started execution of step "filter_for_new_properties".
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - filter_for_new_properties - Loading file from: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpru10zrl_/storage/scrape_pages
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - ASSET_OBSERVATION - DagsterEventType.ASSET_OBSERVATION for step filter_for_new_properties
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - LOADED_INPUT - Loaded input "scrape_pages" using input manager "io_manager"
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - STEP_INPUT - Got input "scrape_pages" of type "Any". (Type check passed).
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - filter_for_new_properties -           id      fingerprint     city
+0    7559068  7559068-1760000  zuerich
+1    7559066  7559066-2100000  zuerich
+2    7559065  7559065-1630000  zuerich
+3    7727366   7727366-790000  zuerich
+4    7709765  7709765-1250000  zuerich
+..       ...              ...      ...
+230  7694979  7694979-1290000  zuerich
+231  7717838   7717838-417000  zuerich
+232  7744100  7744100-1280000  zuerich
+233  7484912  7484912-2000000  zuerich
+234  7772372   7772372-499000  zuerich
+
+[235 rows x 3 columns]
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - filter_for_new_properties - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpru10zrl_/storage/filter_for_new_properties
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - ASSET_MATERIALIZATION - Materialized value filter_for_new_properties.
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+[32m2023-05-31 14:38:07 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - aaec8bb4-bd3a-4d7c-8f9d-1b1dd4704ddd - 58761 - filter_for_new_properties - STEP_SUCCESS - Finished execution of step "filter_for_new_properties" in 129ms.

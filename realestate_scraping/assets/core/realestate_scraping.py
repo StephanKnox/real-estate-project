@@ -66,7 +66,7 @@ def download_pages(context): #-> FileHandle:
 def scrape_pages(context, download_pages):
     dict_ids_prices = {}
     pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
-
+    context.log.info(f"Pages to scrap: {pages_to_scrap}")
     for cnt, page in enumerate(pages_to_scrap):
         ids = []
         prices = []
@@ -113,7 +113,6 @@ def filter_for_new_properties(context, scrape_pages):
         """ 
         SELECT id, fingerprint, city
         FROM pd_scraped_properties
-        WHERE id IN ('7684950','7684949','7574202')
         """)
     context.log.info(df_changed)
 #defs = Definitions(assets=[scrape_pages])

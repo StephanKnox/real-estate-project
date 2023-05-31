@@ -1,0 +1,13 @@
+[32m2023-05-31 14:37:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - LOGS_CAPTURED - Started capturing logs in process (pid: 58739).
+[32m2023-05-31 14:37:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - STEP_START - Started execution of step "scrape_pages".
+[32m2023-05-31 14:37:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - scrape_pages - Loading file from: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpru10zrl_/storage/download_pages
+[32m2023-05-31 14:37:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - ASSET_OBSERVATION - DagsterEventType.ASSET_OBSERVATION for step scrape_pages
+[32m2023-05-31 14:37:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - LOADED_INPUT - Loaded input "download_pages" using input manager "io_manager"
+[32m2023-05-31 14:37:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - STEP_INPUT - Got input "download_pages" of type "Any". (Type check passed).
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - scrape_pages - 24 pages processed.
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - scrape_pages - 235 properties scraped.
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - scrape_pages - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpru10zrl_/storage/scrape_pages
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - ASSET_MATERIALIZATION - Materialized value scrape_pages.
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+[32m2023-05-31 14:37:12 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 98128923-285f-4401-a9b2-450bc8989176 - 58739 - scrape_pages - STEP_SUCCESS - Finished execution of step "scrape_pages" in 1.02s.
