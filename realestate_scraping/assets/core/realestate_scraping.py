@@ -19,7 +19,7 @@ from delta.pip_utils import configure_spark_with_delta_pip
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
 REALESTATE_CITY = 'zuerich'
-REALESTATE_RADIUS = '1'
+REALESTATE_RADIUS = '15'
 LOCAL_PATH = './realestate_scraping/data/'
 LOCAL_PATH_TMP = '/Users/ctac/Desktop/Data Engineer /Projects/GPU-Prices-Scrapper/out/data'
 BUCKET_RAW = 'raw'
@@ -67,6 +67,7 @@ def scrape_pages(context, download_pages):
     dict_ids_prices = {}
     pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
     context.log.info(f"Pages to scrap: {pages_to_scrap}")
+
     for cnt, page in enumerate(pages_to_scrap):
         ids = []
         prices = []
@@ -95,9 +96,15 @@ def scrape_pages(context, download_pages):
     return dict_prop_df  
 
 
-@asset
-def filter_for_new_properties(context, scrape_pages):
+@asset(required_resource_keys={"spark_delta", "s3"})
+def filter_for_new_or_changed_properties(context, scrape_pages):
     #context.log.info(scrape_pages)
+    ids: list = [p['id'] for p in scrape_pages]
+    ids: str = ', '.join(ids)
+    #context.log.info(ids)
+
+    spark_session = context.resources.spark_delta._get_spark_session()
+
     cols_PropertyDataFrame = [
         'id',
         'fingerprint',
@@ -108,13 +115,57 @@ def filter_for_new_properties(context, scrape_pages):
         'radius',
         'last_normalized_price',
     ]
+    cols_props = ['propertyDetails_id', 'fingerprint']
+
     pd_scraped_properties = pd.DataFrame(scrape_pages, columns=cols_PropertyDataFrame)
-    df_changed = psql.sqldf(
-        """ 
-        SELECT id, fingerprint, city
-        FROM pd_scraped_properties
-        """)
-    context.log.info(df_changed)
+    #df_changed = psql.sqldf(
+    #    """ 
+    #    SELECT id, fingerprint, city
+    #    FROM pd_scraped_properties
+    #    """)
+    #context.log.info(df_changed)
+    ##df_existing = spark_session.sql(""" """)
+    existing_props: list = (spark_session.sql(
+            """SELECT DISTINCT propertyDetails_id
+                , CAST(propertyDetails_id AS STRING)
+                    || '-'
+                    || propertyDetails_normalizedPrice AS fingerprint
+            FROM delta.`s3a://real-estate/lake/bronze/property`
+            WHERE propertyDetails_id IN ( {ids} )
+            """.format(
+                ids=ids
+            )
+        )
+        .select('propertyDetails_id', 'fingerprint')
+        .collect()
+    )
+
+    pd_existing_properties = pd.DataFrame(existing_props, columns=cols_props)
+    context.log.info(f"Existing properties : {pd_existing_properties}")
+
+    pd_changed_properties = psql.sqldf(""" 
+    SELECT 
+        p.id, p.fingerprint, p.city, p.radius, p.last_normalized_price
+    FROM pd_scraped_properties p 
+    LEFT OUTER JOIN pd_existing_properties e
+    ON p.id = e.propertyDetails_id
+    WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL""")
+
+    if pd_changed_properties.empty:
+        context.log.info("No property of [{}] changed".format(ids))
+    else:
+        changed_properties = []
+        for index, row in pd_changed_properties.iterrows():
+            changed_properties.append(row.to_dict())
+
+        ids_changed = ', '.join(str(e) for e in pd_changed_properties['id'].tolist())
+
+        context.log.info(f"Number of new or changed properties: {len(ids_changed)}")
+        context.log.info("New or changed properties ids: {}".format(ids_changed))
+    #context.lof.info(pd_changed_properties.count())
+
+
+    #context.log.info(f"Existing properties: {pd_existing_props}")
 #defs = Definitions(assets=[scrape_pages])
 
 # @asset
