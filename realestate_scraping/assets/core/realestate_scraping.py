@@ -2,7 +2,7 @@ from dagster import asset, get_dagster_logger, Output, FileHandle, Definitions
 from bs4 import BeautifulSoup
 from . import helper_functions as hf
 from datetime import datetime
-import os
+import os, time
 from pyspark.sql import  DataFrame, Row
 from pyspark.sql.types import StructField, StructType, StringType, ArrayType
 from pyspark.sql.functions import explode_outer, col
@@ -15,13 +15,16 @@ import pyarrow
 from botocore.exceptions import NoCredentialsError
 from delta.pip_utils import configure_spark_with_delta_pip
 #from minio.error import ResponseError
+from datetime import timedelta
+from ratelimit import limits, sleep_and_retry
+import requests
 
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
-REALESTATE_CITY = 'zuerich'
-REALESTATE_RADIUS = '15'
-LOCAL_PATH = './realestate_scraping/data/'
-LOCAL_PATH_TMP = '/Users/ctac/Desktop/Data Engineer /Projects/GPU-Prices-Scrapper/out/data'
+REALESTATE_CITY = 'meilen'
+REALESTATE_RADIUS = '1'
+LOCAL_PATH = './realestate_scraping/data/htmls/'
+LOCAL_PATH_OUT = './realestate_scraping/data/out/'
 BUCKET_RAW = 'raw'
 
 
@@ -78,7 +81,7 @@ def scrape_pages(context, download_pages):
 
             for _idx in range(len(ids)):
                 dict_ids_prices[ids[_idx]] = prices[_idx]
-    context.log.info(f"{cnt} pages processed.")
+    context.log.info(f"{cnt+1} pages processed.")
 
     dict_prop_df = []
     for _idx in dict_ids_prices:
@@ -97,34 +100,22 @@ def scrape_pages(context, download_pages):
 
 
 @asset(required_resource_keys={"spark_delta", "s3"})
-def filter_for_new_or_changed_properties(context, scrape_pages):
-    #context.log.info(scrape_pages)
+def get_new_or_changed_props(context, scrape_pages):
     ids: list = [p['id'] for p in scrape_pages]
     ids: str = ', '.join(ids)
-    #context.log.info(ids)
 
     spark_session = context.resources.spark_delta._get_spark_session()
 
     cols_PropertyDataFrame = [
-        'id',
-        'fingerprint',
- #       'is_prefix',
-#        'rentOrBuy',
+        'id', 'fingerprint',
+#       'is_prefix', 'rentOrBuy',
         'city',
- #       'propertyType',
-        'radius',
-        'last_normalized_price',
+#       'propertyType',
+        'radius', 'last_normalized_price',
     ]
     cols_props = ['propertyDetails_id', 'fingerprint']
 
     pd_scraped_properties = pd.DataFrame(scrape_pages, columns=cols_PropertyDataFrame)
-    #df_changed = psql.sqldf(
-    #    """ 
-    #    SELECT id, fingerprint, city
-    #    FROM pd_scraped_properties
-    #    """)
-    #context.log.info(df_changed)
-    ##df_existing = spark_session.sql(""" """)
     existing_props: list = (spark_session.sql(
             """SELECT DISTINCT propertyDetails_id
                 , CAST(propertyDetails_id AS STRING)
@@ -141,15 +132,16 @@ def filter_for_new_or_changed_properties(context, scrape_pages):
     )
 
     pd_existing_properties = pd.DataFrame(existing_props, columns=cols_props)
-    context.log.info(f"Existing properties : {pd_existing_properties}")
+    #context.log.info(f"Existing properties : {pd_existing_properties}")
 
     pd_changed_properties = psql.sqldf(""" 
     SELECT 
         p.id, p.fingerprint, p.city, p.radius, p.last_normalized_price
     FROM pd_scraped_properties p 
-    LEFT OUTER JOIN pd_existing_properties e
+    INNER JOIN pd_existing_properties e
     ON p.id = e.propertyDetails_id
-    WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL""")
+    """)
+    ## WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL
 
     if pd_changed_properties.empty:
         context.log.info("No property of [{}] changed".format(ids))
@@ -160,44 +152,65 @@ def filter_for_new_or_changed_properties(context, scrape_pages):
 
         ids_changed = ', '.join(str(e) for e in pd_changed_properties['id'].tolist())
 
-        context.log.info(f"Number of new or changed properties: {len(ids_changed)}")
+        context.log.info(f"Number of new or changed properties: {len(changed_properties)}")
         context.log.info("New or changed properties ids: {}".format(ids_changed))
-    #context.lof.info(pd_changed_properties.count())
+    ## return /yield changed_properties
+    context.log.info(type(changed_properties))
+    context.log.info(changed_properties)
+
+    return changed_properties
+        
+    #context.log.info(changed_properties[:5])
 
 
     #context.log.info(f"Existing properties: {pd_existing_props}")
 #defs = Definitions(assets=[scrape_pages])
 
-# @asset
-#def upload_to_s3(files_list):
-#
-#   minio_url = "localhost:9000"
-#   minio_access_key = "Cb5bODHLhocuw9gH"
-#   minio_secret_key = "3utk358B2rHGwMegTiFY01FUsbBWHcVj"
-#   minio_bucket_name = "delta"
-#
-#   minio_client = Minio(endpoint=minio_url, access_key=minio_access_key, secret_key=minio_secret_key, secure=False)
-#   for _file in files_list:
-#       filename = os.path.basename(_file)
-#       filepath = os.path.abspath(_file)
-#       minio_client.fput_object(bucket_name=minio_bucket_name, object_name=filename, file_path=filepath)
+## @asset
+## def fetch_new_or_changed_props():
+
+@asset(required_resource_keys={"realestate_api", "s3"})
+def cache_properties(context, get_new_or_changed_props):  
+        #search_date = datetime.today().strftime("%y%m%d")
+        apiendpoint = "https://rest-api.immoscout24.ch/v4/en/properties/"
+        tot_len = len(get_new_or_changed_props)
+        for idx, _property in enumerate(get_new_or_changed_props):  
+            #context.log.info(_property)
+            context.log.info(_property['id'])
+            ## result = context.resources.realestate_api._get_property_from_api(id=_property['id'])
+            result = hf._get_property_from_api(apiendpoint, _property['id'])
+            context.log.info(result.text+'\n')
+
+            if result.ok:
+                hf.cache_property_from_api(result, _property, LOCAL_PATH_OUT)
+                idx = idx+1
+            elif result.status_code == 503:
+                time.sleep(600)
+                result = context.resources.realestate_api._get_property_from_api(id=_property['id'])
+                if result.ok:
+                    hf.cache_property_from_api(result, _property, LOCAL_PATH_OUT)
+            else:
+                context.log.error(f"An error has occured, fetched {idx} properties out of {tot_len}.")
+                context.log.error(result.status_code)
+
+        context.log.info(f"Finished caching properties / there are {idx} properties cached out of {tot_len}.")   
 
 
 @asset(
     required_resource_keys={"s3"}
 )
-def upload_to_s3(context):
+def upload_to_s3(context, cache_properties): ## 
     #s3_client = context.resources.s3._get_s3_client()
     #objects = s3_client.list_objects(context.resources.s3.bucket_name ,recursive=True)
-    pages_to_upload = hf.get_pages_from_local(LOCAL_PATH_TMP)
+    pages_to_upload = hf.get_pages_from_local(LOCAL_PATH_OUT)
     
     for _obj in pages_to_upload:
-        context.log.info(_obj)
+        #context.log.info(_obj)
         filename = os.path.basename(_obj)
+        raw_bucket_path = context.resources.s3.path_to_raw
         try:
-        #s3_client.fput_object(context.resources.s3.bucket_name, filename, _obj)
-            context.resources.s3._upload_file_to_s3(BUCKET_RAW, filename, _obj)
-        #context.log.info(f"File {_obj} uploaded to '{bucket}' bucket")
+            context.resources.s3._upload_object_to_s3(raw_bucket_path, filename, _obj)
+            context.log.info(f"File {_obj} uploaded to '{raw_bucket_path}' bucket")
         except FileNotFoundError:
          context.log.error("The file was not found")
         except NoCredentialsError:
@@ -308,3 +321,5 @@ def create_delta_table(context, json_to_flat_properties: DataFrame):
 @asset()
 def merge_delta(context):
     pass
+
+

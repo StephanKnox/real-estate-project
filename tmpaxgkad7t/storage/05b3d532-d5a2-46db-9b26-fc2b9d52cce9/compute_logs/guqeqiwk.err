@@ -1,0 +1,33 @@
+[32m2023-06-01 14:49:01 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05b3d532-d5a2-46db-9b26-fc2b9d52cce9 - 77164 - LOGS_CAPTURED - Started capturing logs in process (pid: 77164).
+[32m2023-06-01 14:49:01 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 05b3d532-d5a2-46db-9b26-fc2b9d52cce9 - 77164 - upload_to_s3 - STEP_START - Started execution of step "upload_to_s3".
+[32m2023-06-01 14:49:01 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 05b3d532-d5a2-46db-9b26-fc2b9d52cce9 - upload_to_s3 - ./realestate_scraping/data/230601_real_estate_data_meilen_1_km_part_1.html
+[32m2023-06-01 14:49:01 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 05b3d532-d5a2-46db-9b26-fc2b9d52cce9 - 77164 - upload_to_s3 - STEP_FAILURE - Execution of step "upload_to_s3" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "upload_to_s3"::
+
+ValueError: Bucket name does not follow S3 standards. Bucket: raw/
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 209, in upload_to_s3
+    context.resources.s3._upload_object_to_s3(raw_bucket_path, filename, _obj)
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 38, in _upload_object_to_s3
+    s3_client.fput_object(bucket_name, key, filename)
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 992, in fput_object
+    return self.put_object(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 1661, in put_object
+    check_bucket_name(bucket_name)
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/helpers.py", line 211, in check_bucket_name
+    raise ValueError(
+[0m

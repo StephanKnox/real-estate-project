@@ -1,11 +1,11 @@
-import re
+import re, requests, os, json, gzip
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
-import os
 import datetime as dt
+
 
 
 class SQL:
@@ -87,3 +87,44 @@ def get_pages_from_local(LOCAL_PATH):
             if filetime.date() == today:
                 files_list.append(os.path.join(root, _file))
     return files_list
+
+
+
+
+
+def json_to_gzip(json_data):
+    json_bytes = json_data.encode('utf-8')
+    return gzip.compress(json_bytes)
+
+
+def json_zip_writer(j, target_key):
+    f = gzip.open(target_key, 'wb')
+    f.write(json.dumps(j).encode('utf-8'))
+    f.close()
+
+
+def cache_property_from_api(response, property, target_key):
+    filename = ''
+    search_date = dt.datetime.now().date().strftime("%y%m%d")# dt.today().strftime("%y%m%d")
+
+    json_prop = response.json()
+    json_prop['propertyDetails']['propertyId'] = property['id']
+    json_prop['propertyDetails']['searchCity'] = property['city']
+    json_prop['propertyDetails']['searchRadius'] = property['radius']
+    json_prop['propertyDetails']['searchDate'] = search_date
+
+    filename = (
+        json_prop['propertyDetails']['propertyId'] 
+        + '_' +
+        json_prop['propertyDetails']['searchDate']
+        + '_' +
+        json_prop['propertyDetails']['searchCity']
+        + '_' +
+        json_prop['propertyDetails']['searchRadius']
+        + 'km' + '.gz'
+    )
+    try:
+        json_zip_writer(json_prop, target_key + filename)
+    except Exception as load_exception:
+        raise Exception(f"Error occurred during caching the file {filename} " + str(load_exception)) from load_exception
+    return True

@@ -1,0 +1,11 @@
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - 77553 - LOGS_CAPTURED - Started capturing logs in process (pid: 77553).
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - 77553 - upload_to_s3 - STEP_START - Started execution of step "upload_to_s3".
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - upload_to_s3 - ./realestate_scraping/data/230601_real_estate_data_meilen_1_km_part_1.html
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - upload_to_s3 - File ./realestate_scraping/data/230601_real_estate_data_meilen_1_km_part_1.html uploaded to 'raw' bucket
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - upload_to_s3 - ./realestate_scraping/data/230601_real_estate_data_meilen_1_km_part_2.html
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - upload_to_s3 - File ./realestate_scraping/data/230601_real_estate_data_meilen_1_km_part_2.html uploaded to 'raw' bucket
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - 77553 - upload_to_s3 - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - upload_to_s3 - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpaxgkad7t/storage/upload_to_s3
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - 77553 - upload_to_s3 - ASSET_MATERIALIZATION - Materialized value upload_to_s3.
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - 77553 - upload_to_s3 - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+[32m2023-06-01 15:00:16 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 92a10e9c-c7df-494f-9310-b1e4ce6f40d3 - 77553 - upload_to_s3 - STEP_SUCCESS - Finished execution of step "upload_to_s3" in 58ms.

@@ -1,11 +1,13 @@
 from dagster import Definitions, ConfigurableResource, EnvVar, IOManager, io_manager, ConfigurableIOManager
-import os
+import os, requests
 from dagster_aws.s3 import s3_resource
 from minio import Minio
 from pyspark.sql import SparkSession
 from delta.pip_utils import configure_spark_with_delta_pip
 from .assets import core_assets
 import pyspark
+from datetime import timedelta
+from ratelimit import limits, sleep_and_retry
 
 
 all_assets = [*core_assets]
@@ -14,7 +16,7 @@ class S3Credentials(ConfigurableResource):
     access_key: str
     secret_key: str
     endpoint: str
-    #bucket_name: str
+    path_to_raw: str
 
     #def __init__(self, s3_resource):
      #   self.s3_resource = s3_resource
@@ -105,6 +107,19 @@ class SparkHelper(ConfigurableResource):
         return spark.read.parquet('./data')
 
 
+class APIHelper(ConfigurableResource):
+    api_endpoint: str
+
+
+    # Call to REST API with a ratelimit of 10 API calls 60 sec
+    @sleep_and_retry
+    @limits(calls=30, period=timedelta(seconds=60).total_seconds())
+    def _get_property_from_api(id):
+        api = APIHelper()
+        result = requests.get(api.api_endpoint+id, timeout=15)
+        return result
+
+
 class LocalParquetIOManager(ConfigurableIOManager):    
     path_to_delta: str
     path_to_raw: str
@@ -129,10 +144,13 @@ class LocalParquetIOManager(ConfigurableIOManager):
         spark = configure_spark_with_delta_pip(builder, extra_packages=my_packages).getOrCreate()
 
         return spark
+    
+
     # TO chage
     def _get_path(self, context):
         return os.path.join(context.run_id, context.step_key, context.name)
         
+
     # TO change    
     def handle_output(self, context, obj):
         #session = SparkHelper()
@@ -140,6 +158,7 @@ class LocalParquetIOManager(ConfigurableIOManager):
         
         #obj.write.parquet(self._get_path(context))
         obj.write.mode("overwrite").parquet('./data')
+
 
     # TO change
     def load_input(self, context):
@@ -163,7 +182,7 @@ defs = Definitions(
             access_key=EnvVar("MINIO_ACCESS_KEY"),
             secret_key=EnvVar("MINIO_SECRET_KEY"),
             endpoint=EnvVar("MINIO_ENDPOINT"),
-            #bucket_name=EnvVar("MINIO_RAW_BUCKET")
+            path_to_raw=EnvVar("MINIO_RAW_BUCKET")
         ),
         "spark_delta": SparkHelper(
             access_key=EnvVar("MINIO_ACCESS_KEY"),
@@ -178,8 +197,10 @@ defs = Definitions(
             endpoint=EnvVar("MINIO_ENDPOINT"),
             path_to_delta=EnvVar("DELTA_TABLE_PATH"),
             path_to_raw=EnvVar("MINIO_RAW_BUCKET")
-            )
-        #"fs_io_manager": io_manager()
+            ),
+        "realestate_api": APIHelper(
+            api_endpoint=EnvVar("API_ENDPOINT_REALESTATE")
+        )
     },
 )
 

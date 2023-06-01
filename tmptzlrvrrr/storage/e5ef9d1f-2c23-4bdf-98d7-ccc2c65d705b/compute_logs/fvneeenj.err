@@ -1,72 +1,0 @@
-[32m2023-05-31 17:09:21 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - LOGS_CAPTURED - Started capturing logs in process (pid: 65111).
-[32m2023-05-31 17:09:21 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - STEP_START - Started execution of step "filter_for_new_properties".
-[32m2023-05-31 17:09:21 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - filter_for_new_properties - Loading file from: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmptzlrvrrr/storage/scrape_pages
-[32m2023-05-31 17:09:21 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - ASSET_OBSERVATION - DagsterEventType.ASSET_OBSERVATION for step filter_for_new_properties
-[32m2023-05-31 17:09:21 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - LOADED_INPUT - Loaded input "scrape_pages" using input manager "io_manager"
-[32m2023-05-31 17:09:21 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - STEP_INPUT - Got input "scrape_pages" of type "Any". (Type check passed).
-Ivy Default Cache set to: /Users/ctac/.ivy2/cache
-The jars for the packages stored in: /Users/ctac/.ivy2/jars
-io.delta#delta-core_2.12 added as a dependency
-org.apache.hadoop#hadoop-aws added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-5cdaa3a6-cd37-48c9-be2a-c5ddfc611a80;1.0
-	confs: [default]
-	found io.delta#delta-core_2.12;2.1.0 in central
-	found io.delta#delta-storage;2.1.0 in central
-	found org.antlr#antlr4-runtime;4.8 in central
-	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
-	found org.apache.hadoop#hadoop-aws;3.3.2 in central
-	found com.amazonaws#aws-java-sdk-bundle;1.11.1026 in central
-	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
-:: resolution report :: resolve 141ms :: artifacts dl 6ms
-	:: modules in use:
-	com.amazonaws#aws-java-sdk-bundle;1.11.1026 from central in [default]
-	io.delta#delta-core_2.12;2.1.0 from central in [default]
-	io.delta#delta-storage;2.1.0 from central in [default]
-	org.antlr#antlr4-runtime;4.8 from central in [default]
-	org.apache.hadoop#hadoop-aws;3.3.2 from central in [default]
-	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
-	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
-	---------------------------------------------------------------------
-	|                  |            modules            ||   artifacts   |
-	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
-	---------------------------------------------------------------------
-	|      default     |   7   |   0   |   0   |   0   ||   7   |   0   |
-	---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-5cdaa3a6-cd37-48c9-be2a-c5ddfc611a80
-	confs: [default]
-	0 artifacts copied, 7 already retrieved (0kB/3ms)
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-[32m2023-05-31 17:09:24 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - filter_for_new_properties -           id      fingerprint     city
-0    7690922  7690922-1295000  zuerich
-1    7635457  7635457-1475000  zuerich
-2    7559068  7559068-1760000  zuerich
-3    7559066  7559066-2100000  zuerich
-4    7559065  7559065-1630000  zuerich
-..       ...              ...      ...
-139  7313175  7313175-2290000  zuerich
-140  7313168  7313168-2980000  zuerich
-141  7308985  7308985-2680000  zuerich
-142  7772372   7772372-499000  zuerich
-143  7713243  7713243-3600000  zuerich
-
-[144 rows x 3 columns]
-[Stage 2:=============>                                           (12 + 8) / 50][Stage 2:===============================>                         (28 + 8) / 50][Stage 2:==============================================>          (41 + 8) / 50]                                                                                [Stage 8:>                                                          (0 + 8) / 8]                                                                                [32m2023-05-31 17:09:34 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - filter_for_new_properties - Existing properties:       propertyDetails_id      fingerprint
-0                7406184  7406184-1240000
-1                7406184  7406184-1240000
-2                7406184  7406184-1240000
-3                7406184  7406184-1240000
-4                7406184  7406184-1240000
-...                  ...              ...
-1402             7485072  7485072-2350000
-1403             7485072  7485072-2350000
-1404             7485072  7485072-2350000
-1405             7485072  7485072-2350000
-1406             7485072  7485072-2350000
-
-[1407 rows x 2 columns]
-[32m2023-05-31 17:09:34 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
-[32m2023-05-31 17:09:34 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - filter_for_new_properties - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmptzlrvrrr/storage/filter_for_new_properties
-[32m2023-05-31 17:09:34 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - ASSET_MATERIALIZATION - Materialized value filter_for_new_properties.
-[32m2023-05-31 17:09:34 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
-[32m2023-05-31 17:09:34 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - e5ef9d1f-2c23-4bdf-98d7-ccc2c65d705b - 65111 - filter_for_new_properties - STEP_SUCCESS - Finished execution of step "filter_for_new_properties" in 13.3s.
