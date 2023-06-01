@@ -15,9 +15,6 @@ import pyarrow
 from botocore.exceptions import NoCredentialsError
 from delta.pip_utils import configure_spark_with_delta_pip
 #from minio.error import ResponseError
-from datetime import timedelta
-from ratelimit import limits, sleep_and_retry
-import requests
 
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
@@ -26,6 +23,7 @@ REALESTATE_RADIUS = '1'
 LOCAL_PATH = './realestate_scraping/data/htmls/'
 LOCAL_PATH_OUT = './realestate_scraping/data/out/'
 BUCKET_RAW = 'raw'
+API_ENDPOINT = "https://rest-api.immoscout24.ch/v4/en/properties/"
 
 
     #group_name="scraping",
@@ -160,40 +158,28 @@ def get_new_or_changed_props(context, scrape_pages):
 
     return changed_properties
         
-    #context.log.info(changed_properties[:5])
 
-
-    #context.log.info(f"Existing properties: {pd_existing_props}")
-#defs = Definitions(assets=[scrape_pages])
-
-## @asset
-## def fetch_new_or_changed_props():
-
-@asset(required_resource_keys={"realestate_api", "s3"})
+@asset()
 def cache_properties(context, get_new_or_changed_props):  
-        #search_date = datetime.today().strftime("%y%m%d")
-        apiendpoint = "https://rest-api.immoscout24.ch/v4/en/properties/"
         tot_len = len(get_new_or_changed_props)
+
         for idx, _property in enumerate(get_new_or_changed_props):  
             #context.log.info(_property)
             context.log.info(_property['id'])
-            ## result = context.resources.realestate_api._get_property_from_api(id=_property['id'])
-            result = hf._get_property_from_api(apiendpoint, _property['id'])
-            context.log.info(result.text+'\n')
-
+            result = hf.get_property_from_api(API_ENDPOINT, _property['id'])
+            #context.log.info(result.text+'\n')
             if result.ok:
                 hf.cache_property_from_api(result, _property, LOCAL_PATH_OUT)
-                idx = idx+1
             elif result.status_code == 503:
                 time.sleep(600)
-                result = context.resources.realestate_api._get_property_from_api(id=_property['id'])
+                result = hf.get_property_from_api(API_ENDPOINT, _property['id'])
                 if result.ok:
                     hf.cache_property_from_api(result, _property, LOCAL_PATH_OUT)
             else:
-                context.log.error(f"An error has occured, fetched {idx} properties out of {tot_len}.")
+                context.log.error(f"An error has occured, fetched {idx+1} properties out of {tot_len}.")
                 context.log.error(result.status_code)
 
-        context.log.info(f"Finished caching properties / there are {idx} properties cached out of {tot_len}.")   
+        context.log.info(f"Finished caching properties / there are {idx+1} properties cached out of {tot_len}.")   
 
 
 @asset(

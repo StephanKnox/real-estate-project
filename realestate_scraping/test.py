@@ -24,10 +24,11 @@ df = spark.sql(
                 , CAST(propertyDetails_id AS STRING)
                     || '-'
                     || propertyDetails_normalizedPrice AS fingerprint,
-                    propertyDetails_searchCity as city
+                    propertyDetails_searchCity as city,
+                    propertyDetails_cityName
             FROM delta.`s3a://real-estate/lake/bronze/property`
-            WHERE propertyDetails_id IN (7636004, 7621229)
+            WHERE propertyDetails_cityName = 'Meilen'
             """
             )
  
-df.select('city').show()
+df.select('propertyDetails_id', 'propertyDetails_cityName').show(50)

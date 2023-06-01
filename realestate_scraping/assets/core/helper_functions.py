@@ -5,7 +5,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import datetime as dt
-
+from datetime import timedelta
+from ratelimit import limits, sleep_and_retry
 
 
 class SQL:
@@ -89,7 +90,11 @@ def get_pages_from_local(LOCAL_PATH):
     return files_list
 
 
-
+@sleep_and_retry
+@limits(calls=30, period=timedelta(seconds=60).total_seconds())
+def get_property_from_api(api_endpoint,id):
+        result = requests.get(api_endpoint+id, timeout=15)
+        return result
 
 
 def json_to_gzip(json_data):

@@ -1,47 +1,0 @@
-[32m2023-06-01 15:06:59 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - LOGS_CAPTURED - Started capturing logs in process (pid: 78977).
-[32m2023-06-01 15:06:59 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - STEP_START - Started execution of step "get_new_or_changed_props".
-[32m2023-06-01 15:06:59 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - get_new_or_changed_props - Loading file from: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpaxgkad7t/storage/scrape_pages
-[32m2023-06-01 15:06:59 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - ASSET_OBSERVATION - DagsterEventType.ASSET_OBSERVATION for step get_new_or_changed_props
-[32m2023-06-01 15:06:59 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - LOADED_INPUT - Loaded input "scrape_pages" using input manager "io_manager"
-[32m2023-06-01 15:06:59 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - STEP_INPUT - Got input "scrape_pages" of type "Any". (Type check passed).
-Ivy Default Cache set to: /Users/ctac/.ivy2/cache
-The jars for the packages stored in: /Users/ctac/.ivy2/jars
-io.delta#delta-core_2.12 added as a dependency
-org.apache.hadoop#hadoop-aws added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-2dc36e88-c135-4b7e-a0bc-bca7899a5599;1.0
-	confs: [default]
-	found io.delta#delta-core_2.12;2.1.0 in central
-	found io.delta#delta-storage;2.1.0 in central
-	found org.antlr#antlr4-runtime;4.8 in central
-	found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
-	found org.apache.hadoop#hadoop-aws;3.3.2 in central
-	found com.amazonaws#aws-java-sdk-bundle;1.11.1026 in central
-	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
-:: resolution report :: resolve 136ms :: artifacts dl 6ms
-	:: modules in use:
-	com.amazonaws#aws-java-sdk-bundle;1.11.1026 from central in [default]
-	io.delta#delta-core_2.12;2.1.0 from central in [default]
-	io.delta#delta-storage;2.1.0 from central in [default]
-	org.antlr#antlr4-runtime;4.8 from central in [default]
-	org.apache.hadoop#hadoop-aws;3.3.2 from central in [default]
-	org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
-	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
-	---------------------------------------------------------------------
-	|                  |            modules            ||   artifacts   |
-	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
-	---------------------------------------------------------------------
-	|      default     |   7   |   0   |   0   |   0   ||   7   |   0   |
-	---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-2dc36e88-c135-4b7e-a0bc-bca7899a5599
-	confs: [default]
-	0 artifacts copied, 7 already retrieved (0kB/4ms)
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-[Stage 2:======>                                                  (6 + 10) / 50][Stage 2:===================>                                     (17 + 9) / 50][Stage 2:=============================================>           (40 + 8) / 50]                                                                                [Stage 8:>                                                          (0 + 8) / 8]                                                                                [32m2023-06-01 15:07:11 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - get_new_or_changed_props - Number of new or changed properties: 10
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - get_new_or_changed_props - New or changed properties ids: 7686027, 7636004, 7621229, 7474608, 7675115, 7628818, 7577483, 7551503, 7598017, 7225613
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mINFO[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - get_new_or_changed_props - [{'id': '7686027', 'fingerprint': '7686027-2380000', 'city': 'meilen', 'radius': '1', 'last_normalized_price': '2380000'}, {'id': '7636004', 'fingerprint': '7636004-1525000', 'city': 'meilen', 'radius': '1', 'last_normalized_price': '1525000'}, {'id': '7621229', 'fingerprint': '7621229-980000', 'city': 'meilen', 'radius': '1', 'last_normalized_price': '980000'}, {'id': '7474608', 'fingerprint': '7474608-3800000', 'city': 'meilen', 'radius': '1', 'last_normalized_price': '3800000'}, {'id': '7675115', 'fingerprint': '7675115-3250000', 'city': 'meilen', 'radius': '1', 'last_normalized_price': '3250000'}]
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - get_new_or_changed_props - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmpaxgkad7t/storage/get_new_or_changed_props
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - ASSET_MATERIALIZATION - Materialized value get_new_or_changed_props.
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
-[32m2023-06-01 15:07:11 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 5c6d2256-ad86-4100-9c95-8a4265102307 - 78977 - get_new_or_changed_props - STEP_SUCCESS - Finished execution of step "get_new_or_changed_props" in 12.51s.
