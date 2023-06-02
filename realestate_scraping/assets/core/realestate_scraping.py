@@ -304,6 +304,16 @@ def create_delta_table(context, json_to_flat_properties: DataFrame):
 #print(df_acidentes_delta.show(4))
 
 
+@asset(
+    required_resource_keys={"s3"}
+)
+def move_from_raw_to_stg(context):
+    raw_bucket = context.resources.s3.path_to_raw
+    stg_bucket = "staging"#context.resources.s3.path_to_stg
+    
+    context.resources.s3._move_object_between_buckets(raw_bucket, "staging")
+
+
 @asset()
 def merge_delta(context):
     pass

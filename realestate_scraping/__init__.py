@@ -1,11 +1,13 @@
 from dagster import Definitions, ConfigurableResource, EnvVar, IOManager, io_manager, ConfigurableIOManager
 import os, requests
 from dagster_aws.s3 import s3_resource
-from minio import Minio
 from pyspark.sql import SparkSession
 from delta.pip_utils import configure_spark_with_delta_pip
 from .assets import core_assets
 import pyspark
+from datetime import datetime, timezone
+from minio import Minio
+from minio.commonconfig import  CopySource
 
 
 
@@ -16,6 +18,7 @@ class S3Credentials(ConfigurableResource):
     secret_key: str
     endpoint: str
     path_to_raw: str
+    #path_to_stg: str
 
 
     def _get_s3_client(self):
@@ -27,7 +30,8 @@ class S3Credentials(ConfigurableResource):
     
 
     def _list_files_s3(self, bucket_name, prefix=""):
-        return self._get_s3_client.list_objects(bucket_name, prefix=prefix,recursive=True)    
+        minio = self._get_s3_client()
+        return minio.list_objects(bucket_name, prefix=prefix,recursive=True)    
     #"/lake/bronze/property",
 
     def _upload_object_to_s3(self, bucket_name, key, filename):
@@ -39,6 +43,26 @@ class S3Credentials(ConfigurableResource):
         s3_client = self._get_s3_client()
         object = s3_client.fget_object(bucket_name, key, filename)
         return object
+    
+
+    def _delete_objects_from_s3_bucket(self, bucket_name):
+        objects_list = self._list_files_s3(bucket_name)
+        minio = self._get_s3_client()
+
+        for _obj in objects_list:       
+            minio.remove_object(bucket_name, _obj._object_name)
+
+
+    def _move_object_between_buckets(self, src_bucket, tgt_bucket):
+        s3_client = self._get_s3_client()
+        today = datetime.now().date().strftime("%y%m%d")
+
+        [ s3_client.copy_object(tgt_bucket, _obj.object_name, CopySource(src_bucket, _obj.object_name))
+        for _obj in self._list_files_s3(src_bucket)
+        if today in _obj.object_name ]
+        
+        #for _obj in list:
+                #s3_client.copy_object(tgt_bucket, _obj.object_name, CopySource(src_bucket, _obj.object_name))
 
 
 class SparkHelper(ConfigurableResource):
@@ -67,6 +91,7 @@ class SparkHelper(ConfigurableResource):
 
         return spark
 
+
     def _read_delta_table(self):
         spark = self._get_spark_session()
         ## Reading from a Delta table into a PySpark dataframe
@@ -87,14 +112,15 @@ class SparkHelper(ConfigurableResource):
             .format("json") \
             .option("compression", "gzip") \
             .load(self.path_to_raw+"*.gz")
-        #df_zipped.printSchema()
-        
+        #df_zipped.printSchema()     
         return df_zipped
     
+
     # TO change    
     def handle_output(self, context, obj):
         #obj.write.parquet(self._get_path(context))
         obj.write.parquet('./data')
+
 
     # TO change
     def load_input(self, context):
@@ -153,10 +179,10 @@ class LocalParquetIOManager(ConfigurableIOManager):
 #deployment_name = os.environ.get("DAGSTER_DEPLOYMENT", "local")
 
 
-
 @io_manager
 def local_parquet_io_manager():
     return LocalParquetIOManager(ConfigurableIOManager)
+
 
 defs = Definitions(
     assets=all_assets,
@@ -165,7 +191,8 @@ defs = Definitions(
             access_key=EnvVar("MINIO_ACCESS_KEY"),
             secret_key=EnvVar("MINIO_SECRET_KEY"),
             endpoint=EnvVar("MINIO_ENDPOINT"),
-            path_to_raw=EnvVar("MINIO_RAW_BUCKET")
+            #path_to_stg=EnvVar("MINIO_STG_BUCKET"),
+            path_to_raw=EnvVar("MINIO_RAW_BUCKET")    
         ),
         "spark_delta": SparkHelper(
             access_key=EnvVar("MINIO_ACCESS_KEY"),

@@ -1,0 +1,39 @@
+[32m2023-06-02 18:33:13 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 36ffbcc1-1790-41e7-8c2c-a62bdb72ef3c - 1516 - LOGS_CAPTURED - Started capturing logs in process (pid: 1516).
+[32m2023-06-02 18:33:13 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 36ffbcc1-1790-41e7-8c2c-a62bdb72ef3c - 1516 - move_from_raw_to_stg - STEP_START - Started execution of step "move_from_raw_to_stg".
+[32m2023-06-02 18:33:13 +0200[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 36ffbcc1-1790-41e7-8c2c-a62bdb72ef3c - 1516 - move_from_raw_to_stg - STEP_FAILURE - Execution of step "move_from_raw_to_stg" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "move_from_raw_to_stg"::
+
+minio.error.S3Error: S3 operation failed; code: NoSuchBucket, message: The specified bucket does not exist, resource: /MINIO_STG_BUCKET, request_id: 1764E4AD3E479D60, host_id: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, bucket_name: MINIO_STG_BUCKET
+
+Stack Trace:
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 54, in op_execution_error_boundary
+    yield
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 443, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 124, in _coerce_solid_compute_fn_to_iterator
+    result = invoke_compute_fn(
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 118, in invoke_compute_fn
+    return fn(context, **args_to_pass) if context_arg_provided else fn(**args_to_pass)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/assets/core/realestate_scraping.py", line 314, in move_from_raw_to_stg
+    context.resources.s3._move_object_between_buckets(raw_bucket, stg_bucket)
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 60, in _move_object_between_buckets
+    [ s3_client.copy_object(tgt_bucket, _obj.object_name, CopySource(src_bucket, _obj.object_name))
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/realestate_scraping/__init__.py", line 60, in <listcomp>
+    [ s3_client.copy_object(tgt_bucket, _obj.object_name, CopySource(src_bucket, _obj.object_name))
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 1281, in copy_object
+    response = self._execute(
+               ^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 403, in _execute
+    region = self._get_region(bucket_name, None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 470, in _get_region
+    response = self._url_open(
+               ^^^^^^^^^^^^^^^
+  File "/Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/env/lib/python3.11/site-packages/minio/api.py", line 389, in _url_open
+    raise response_error
+[0m
