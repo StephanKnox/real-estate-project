@@ -309,9 +309,16 @@ def create_delta_table(context, json_to_flat_properties: DataFrame):
 )
 def move_from_raw_to_stg(context):
     raw_bucket = context.resources.s3.path_to_raw
-    stg_bucket = "staging"#context.resources.s3.path_to_stg
+    stg_bucket = context.resources.s3.path_to_stg
     
-    context.resources.s3._move_object_between_buckets(raw_bucket, "staging")
+    try:
+        context.resources.s3._delete_objects_from_s3_bucket(stg_bucket)
+    except NoCredentialsError:
+        context.log.error("Credentials not available")
+    except Exception as e:
+        context.log.error(f"Error occurred while deleting objects from {stg_bucket} bucket" + str(e))
+    
+    context.resources.s3._move_object_between_buckets(raw_bucket, stg_bucket)
 
 
 @asset()

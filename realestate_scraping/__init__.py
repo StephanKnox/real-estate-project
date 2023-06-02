@@ -18,7 +18,7 @@ class S3Credentials(ConfigurableResource):
     secret_key: str
     endpoint: str
     path_to_raw: str
-    #path_to_stg: str
+    path_to_stg: str
 
 
     def _get_s3_client(self):
@@ -191,8 +191,8 @@ defs = Definitions(
             access_key=EnvVar("MINIO_ACCESS_KEY"),
             secret_key=EnvVar("MINIO_SECRET_KEY"),
             endpoint=EnvVar("MINIO_ENDPOINT"),
-            #path_to_stg=EnvVar("MINIO_STG_BUCKET"),
-            path_to_raw=EnvVar("MINIO_RAW_BUCKET")    
+            path_to_raw=EnvVar("MINIO_RAW_BUCKET"),
+            path_to_stg=EnvVar("MINIO_STG_BUCKET")
         ),
         "spark_delta": SparkHelper(
             access_key=EnvVar("MINIO_ACCESS_KEY"),

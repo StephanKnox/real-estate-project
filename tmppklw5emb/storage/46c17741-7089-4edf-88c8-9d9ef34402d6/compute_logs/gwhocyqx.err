@@ -1,0 +1,7 @@
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - 3080 - LOGS_CAPTURED - Started capturing logs in process (pid: 3080).
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - 3080 - move_from_raw_to_stg - STEP_START - Started execution of step "move_from_raw_to_stg".
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - 3080 - move_from_raw_to_stg - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - move_from_raw_to_stg - Writing file at: /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/tmppklw5emb/storage/move_from_raw_to_stg
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - 3080 - move_from_raw_to_stg - ASSET_MATERIALIZATION - Materialized value move_from_raw_to_stg.
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - 3080 - move_from_raw_to_stg - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+[32m2023-06-02 19:03:20 +0200[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 46c17741-7089-4edf-88c8-9d9ef34402d6 - 3080 - move_from_raw_to_stg - STEP_SUCCESS - Finished execution of step "move_from_raw_to_stg" in 189ms.
