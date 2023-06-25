@@ -18,8 +18,8 @@ from delta.pip_utils import configure_spark_with_delta_pip
 
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
-REALESTATE_CITY = 'meilen'
-REALESTATE_RADIUS = '1'
+REALESTATE_CITY = 'zuerich'
+REALESTATE_RADIUS = '15'
 LOCAL_PATH = './realestate_scraping/data/htmls/'
 LOCAL_PATH_OUT = './realestate_scraping/data/out/'
 BUCKET_RAW = 'raw'
@@ -32,6 +32,8 @@ API_ENDPOINT = "https://rest-api.immoscout24.ch/v4/en/properties/"
         #io_manager_key="fs_io_manager"
         )
 def download_pages(context): #-> FileHandle:
+    """Downloads .html pages from realestate website to a local ./data/html/ folder"""
+    
     date_today = datetime.today().strftime('%y%m%d')
     last_page_number = hf.get_last_page_number(REALESTATE_BASE_URL, REALESTATE_CITY, REALESTATE_RADIUS)
 
@@ -65,6 +67,8 @@ def download_pages(context): #-> FileHandle:
         #io_manager_key="local_parquet_io_manager"
         )
 def scrape_pages(context, download_pages):
+    """Scrapes downloaded .html pages on local ./data/html/ folder for ids and prices.
+    Only pages which were created today() are scraped"""
     dict_ids_prices = {}
     pages_to_scrap = hf.get_pages_from_local(LOCAL_PATH)
     context.log.info(f"Pages to scrap: {pages_to_scrap}")
@@ -99,9 +103,13 @@ def scrape_pages(context, download_pages):
 
 @asset(required_resource_keys={"spark_delta", "s3"})
 def get_new_or_changed_props(context, scrape_pages):
+    """Custom CDC task which compares scraped property ids and prices and determines
+    if the property needs to be requested from an API.
+    Only new properties and existing properies with changed prices are returned in a form
+    of a dictionary"""
+
     ids: list = [p['id'] for p in scrape_pages]
     ids: str = ', '.join(ids)
-
     spark_session = context.resources.spark_delta._get_spark_session()
 
     cols_PropertyDataFrame = [
@@ -136,8 +144,9 @@ def get_new_or_changed_props(context, scrape_pages):
     SELECT 
         p.id, p.fingerprint, p.city, p.radius, p.last_normalized_price
     FROM pd_scraped_properties p 
-    INNER JOIN pd_existing_properties e
+    LEFT JOIN pd_existing_properties e
     ON p.id = e.propertyDetails_id
+    WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL
     """)
     ## WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL
 
@@ -152,15 +161,18 @@ def get_new_or_changed_props(context, scrape_pages):
 
         context.log.info(f"Number of new or changed properties: {len(changed_properties)}")
         context.log.info("New or changed properties ids: {}".format(ids_changed))
-    ## return /yield changed_properties
-    context.log.info(type(changed_properties))
-    context.log.info(changed_properties)
+    # return /yield changed_properties
+    #context.log.info(type(changed_properties))
+    #context.log.info(changed_properties)
 
     return changed_properties
         
 
 @asset()
 def cache_properties(context, get_new_or_changed_props):  
+        """Makes a request to an realestate API with properties returned by the CDC tasks.
+        Data files are gzipped and saved on local ./data/out/"""
+        
         tot_len = len(get_new_or_changed_props)
 
         for idx, _property in enumerate(get_new_or_changed_props):  
@@ -188,6 +200,9 @@ def cache_properties(context, get_new_or_changed_props):
 def upload_to_s3(context, cache_properties): ## 
     #s3_client = context.resources.s3._get_s3_client()
     #objects = s3_client.list_objects(context.resources.s3.bucket_name ,recursive=True)
+    """Uploads files retrieved from an realestate API from local /data/out/ folder to S3 WAR bucket on MINIO.
+    Only files created today() are taken."""
+
     pages_to_upload = hf.get_pages_from_local(LOCAL_PATH_OUT)
     
     for _obj in pages_to_upload:
@@ -222,11 +237,14 @@ def json_to_flat_properties(context) -> DataFrame:
 6. If yes repeat the procedure until no more complex fields exist
 7. If no more complex fields exist -> return Spark DataFrame
 """
+    context.log.info(context.log.info(context.resources.spark_delta.path_to_raw))
     spark_session = context.resources.spark_delta._get_spark_session()
     df = spark_session.read \
         .format("json") \
         .option("compression", "gzip") \
-        .load(context.resources.spark_delta.path_to_raw+"*.gz")
+        .load("s3a://staging/*.gz")
+        ##.load(context.resources.spark_delta.path_to_raw+"/*.gz")
+        #
     
     context.log.info(f"{df.count()} files were read into a data frame.")
     
@@ -234,7 +252,8 @@ def json_to_flat_properties(context) -> DataFrame:
     [ 
         (_field.name, _field.dataType) 
         for _field in df.schema.fields
-        if type(_field.dataType) == ArrayType or type(_field.dataType) == StructType
+        if type(_field.dataType) == StructType
+        ##if type(_field.dataType) == ArrayType or type(_field.dataType) == StructType
     ]
     )
   
@@ -251,14 +270,15 @@ def json_to_flat_properties(context) -> DataFrame:
 
     # if ArrayType then add the Array Elements as Rows using the explode function
             # i.e. explode Arrays
-        elif type(complex_fields[col_name]) == ArrayType:
-            df = df.withColumn(col_name, explode_outer(col_name))
+        ##elif type(complex_fields[col_name]) == ArrayType:
+            ##df = df.withColumn(col_name, explode_outer(col_name))
 
         complex_fields = dict(
             [
                 (field.name, field.dataType)
                 for field in df.schema.fields
-                if type(field.dataType) == ArrayType or type(field.dataType) == StructType
+                ##if type(field.dataType) == ArrayType or type(field.dataType) == StructType
+                if type(field.dataType) == StructType
             ]
         )
     #print(complex_fields.keys())
@@ -281,11 +301,13 @@ def json_to_flat_properties(context) -> DataFrame:
 def create_delta_table(context, json_to_flat_properties: DataFrame):
     #df = context.resources.spark_delta._read_delta_table()
     df = json_to_flat_properties
-    context.log.info(df.count())
-
+    #context.log.info(df.count())
     spark_session = context.resources.spark_delta._get_spark_session()
     spark_session.sql("""CREATE DATABASE IF NOT EXISTS realestate""")
     spark_session.sql("""DROP TABLE IF EXISTS realestate.property""")
+
+   
+
     ##spark_session.sql("""
     ##    CREATE TABLE IF NOT EXISTS {}.{}
     ##    USING DELTA
@@ -293,21 +315,25 @@ def create_delta_table(context, json_to_flat_properties: DataFrame):
     ##    """)
     
     #spark_session.sql("""DROP TABLE IF EXISTS 's3a://real-estate/lake/bronze/property'""")
-    ##df.write.format("delta")\
-    ##    .mode("overwrite")\
-    ##    .option("mergeSchema", "true") \
-    ##    .save("s3a://real-estate/lake/bronze/property")
+    df.write.format("delta")\
+        .mode("overwrite")\
+        .option("mergeSchema", "true") \
+        .save("s3a://real-estate/lake/bronze/property")
+    
     df_delta = spark_session.read.format("delta") \
         .load("s3a://real-estate/lake/bronze/property")
 
-    context.log.info(f"Schema of the delta table: \n{df_delta.select('*').take(2)}")
+    context.log.info(f"Schema of the delta table: \n{df_delta.count()}")
 #print(df_acidentes_delta.show(4))
 
 
 @asset(
     required_resource_keys={"s3"}
 )
-def move_from_raw_to_stg(context):
+def move_from_raw_to_stg(context, upload_to_s3):
+    """Moves files from RAW bucket on MINIO S3 to STAGING bucket on MINIO S3.
+    TO DO: Take only files uploaded today()"""
+
     raw_bucket = context.resources.s3.path_to_raw
     stg_bucket = context.resources.s3.path_to_stg
     
@@ -321,8 +347,27 @@ def move_from_raw_to_stg(context):
     context.resources.s3._move_object_between_buckets(raw_bucket, stg_bucket)
 
 
-@asset()
-def merge_delta(context):
-    pass
+@asset(
+        required_resource_keys={"spark_delta"},
+        io_manager_key="local_parquet_io_manager"
+)
+def merge_delta(context, json_to_flat_properties: DataFrame):
+    df_input = json_to_flat_properties
+    df_input.createOrReplaceTempView("new_properties")
+    context.log.info(df_input.select("propertyDetails_id").count())
+
+    spark = context.resources.spark_delta._get_spark_session()
+
+    spark.sql(
+            """
+           MERGE INTO delta.`s3a://real-estate/lake/bronze/property` trg
+            USING new_properties AS src
+            ON trg.propertyDetails_id = src.propertyDetails_id
+            WHEN MATCHED THEN
+            UPDATE SET *
+            WHEN NOT MATCHED THEN
+            INSERT *
+            """)
+
 
 

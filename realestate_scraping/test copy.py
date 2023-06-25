@@ -26,43 +26,7 @@ builder = pyspark.sql.SparkSession.builder.appName("RealEstateApp") \
         
 my_packages = ["org.apache.hadoop:hadoop-aws:3.3.2"]
 spark = configure_spark_with_delta_pip(builder, extra_packages=my_packages).getOrCreate()
-minio = Minio(
-                endpoint=MINIO_ENDPOINT, 
-                access_key=MINIO_ACCESS_KEY, 
-                secret_key=MINIO_SECRET_KEY, 
-                secure=False)
 
-today = dt.datetime.now().date().strftime("%y%m%d")
-"""
-print(today)
-print(int(today.strftime("%Y")))
-print(int(today.strftime("%m")))
-print(int(today.strftime("%d")))
-print(datetime(int(today.strftime("%Y")), 
-                                                        int(today.strftime("%m")), 
-                                                        int(today.strftime("%d"))))
-"""
-list_staging = minio.list_objects("staging", prefix="",recursive=True)
-print(list_staging)
+from pyspark.sql.functions import col, column, expr
 
-for _obj in list_staging:       
-        result = minio.remove_object("staging", _obj._object_name)
-        print(result)
-
-##list_raw = [_obj.object_name 
-##            for _obj in minio.list_objects("raw", prefix="",recursive=True) 
-##            if today in _obj.object_name]
-##print(list_raw)
-
-#for _file in list_raw:
-#    if today in _file.object_name:
-#        minio.copy_object("staging", _file.object_name, CopySource("raw", _file.object_name),
-#    )
-
-
-#print(result.object_name, result.version_id)
-
-#df = spark.read.format("json").option("compression", "gzip").load(f"s3a://raw/"+new_list)
-
-
-
+df = spark.read.csv("")

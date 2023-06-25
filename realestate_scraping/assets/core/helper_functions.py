@@ -91,7 +91,7 @@ def get_pages_from_local(LOCAL_PATH):
 
 
 @sleep_and_retry
-@limits(calls=30, period=timedelta(seconds=60).total_seconds())
+@limits(calls=15, period=timedelta(seconds=60).total_seconds())
 def get_property_from_api(api_endpoint,id):
         result = requests.get(api_endpoint+id, timeout=15)
         return result

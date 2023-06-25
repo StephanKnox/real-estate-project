@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Fri Jun 02 11:21:51 CEST 2023:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0188-7b69-ccc0-000008681188 
+Fri Jun 23 15:43:58 PDT 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0188-ea6d-b431-000007caf200 
 on database directory /Users/ctac/Desktop/Data Engineer /Projects/realestate_scraping_project/realestate-scraping/metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@67424e82 
 Loaded from file:/opt/homebrew/Cellar/apache-spark/3.3.1/libexec/jars/derby-10.14.2.0.jar
 java.vendor=Homebrew

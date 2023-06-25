@@ -199,7 +199,7 @@ defs = Definitions(
             secret_key=EnvVar("MINIO_SECRET_KEY"),
             endpoint=EnvVar("MINIO_ENDPOINT"),
             path_to_delta=EnvVar("DELTA_TABLE_PATH"),
-            path_to_raw=EnvVar("MINIO_RAW_BUCKET")
+            path_to_raw=EnvVar("PATH_TO_RAW")
         ),
         "local_parquet_io_manager": LocalParquetIOManager(
             access_key=EnvVar("MINIO_ACCESS_KEY"),
