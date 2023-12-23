@@ -19,7 +19,7 @@ from delta.pip_utils import configure_spark_with_delta_pip
 
 REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
 REALESTATE_CITY = 'zuerich'
-REALESTATE_RADIUS = '15'
+REALESTATE_RADIUS = '1'
 LOCAL_PATH = './realestate_scraping/data/htmls/'
 LOCAL_PATH_OUT = './realestate_scraping/data/out/'
 BUCKET_RAW = 'raw'
