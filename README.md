@@ -5,9 +5,9 @@ to identify potentially attractive offers for buying a property.
 
 # Getting the Data
 
-Main data source for the project is one of the most popular swiss real-estate web portals which also offers an API
+Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API
 interface allowing to make requests and receive a very detailed description of a property.
-In order to make a call to an API it is necessary to provide a propery id (internal id of a property on the real-estate web portal). There is also quite strict limit to the number of calls to the API, before receiving resource unavailable
+In order to make a call to an API it is necessary to provide a propery id (internal id of a property on the real-estate portal). There is also quite strict limit to the number of calls to the API, before receiving resource unavailable
 error. 
 
 In order to get the propery id web scraping is needed, that is, get correctly rendered .html page and then scrape it for the 
@@ -18,15 +18,15 @@ In order to increase web scraping performance all .html pages first retrieved an
 and after scraped for property id and price. These two fields consists a finger print, i.e. a unique combination which
 indicates if the property already exists or not in the data lakehouse table and if it exists if the price has changed.
 
+# Custom Change Data Capture (CDC)
+In order not to overburden an API with hundres of calls every day, there was a need in a mechanism which will allow to determine
+which properties are of interest, i.e. properties that do not exists yet in the data lakehouse table or existing properties that had a price change. 
+This information should be available before making any API requests and only properties that are interesting should be requested. To solve this problem web scraping is used. Web pages are first retrieved from real-estate portal and then scraped for two values: property id and property price. Together these two consist a fingerprint - a unique identifier of each property and it's price.
 
 
 
 
 
-Pipeline takes the input file splitted in 5 parts and makes a call to OMDB API for each title 
-creating enriched files and uploads them over SSH to SFTP server on AWS linked to S3 "raw" bucket.
-From "raw" storage new files are transfered into the staging bucket and from there data is loaded 
-into Postgres database instance which functions as a serving layer for reporting via Tableau.
 
 Tableau dashboard shows best movies per decade, genre, best years in cinematography quantified by me as when 
 number of good movies produced in a year is 1.5 times higher than the average per year from 1920s up to 
