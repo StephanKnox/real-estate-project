@@ -3,8 +3,21 @@
 I've started this project in order to get a sense of housing market situation in cantons of Zug and Zurich and 
 to identify potentially attractive offers for buying a property. 
 
-Main data source is one of the most popular swiss real-estate web portals which also offers an API
-interface that allows one to make requests and receive a very detailed description of a property.
+Main data source for the project is one of the most popular swiss real-estate web portals which also offers an API
+interface allowing to make requests and receive a very detailed description of a property.
+In order to make a call to an API it is necessary to provide a propery id (internal id of a property on the real-estate web portal). There is also quite strict limit to the number of calls to the API, before receiving resource unavailable
+error. 
+In order to get the propery id web scraping is needed, that is, get correctly rendered .html page and then scrape it for the 
+id. Many web sites including this one make it hard to just get .html page contents.
+Luckly Python library called Selenium designed for web tests automation can help to circumvent that obstacle.
+Web scraping itself is done with the help of another Python library - Beautiful Soup.
+In order to increase web scraping performance all .html pages first retrieved and saved to a local storage
+and after scraped for property id and price. These two fields consists a finger print, i.e. a unique combination which
+indicates if the property already exists or not in the data lakehouse table and if it exists if the price has changed.
+
+
+
+
 
 
 Pipeline takes the input file splitted in 5 parts and makes a call to OMDB API for each title 
