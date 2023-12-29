@@ -27,8 +27,8 @@ Web scraping itself is done with the help of another Python library - Beautiful 
 In order not to overburden an API with hundres of calls every day, there was a need in a mechanism which will allow to determine
 which properties are of interest, i.e. properties that do not exists yet in the data lakehouse table or existing properties that had a price change. 
 
-This information should be available before making any API requests and only properties that are interesting should be requested. To solve this problem web scraping is used. Web pages are first retrieved from real-estate portal and then scraped for two values: property id and property price. Together these two consist a fingerprint - a unique identifier of each property and it's price.
-
+This information should be available before making any API requests and only properties that are interesting should be requested. To solve this problem web scraping is used. Web pages are first retrieved from real-estate portal and then scraped for two values: property id and property price. Together these two consist a fingerprint - a unique identifier of each property and it's price. Knowing fingerprints of all properties in the location of interest on the real estate web portal allows to compare them with properties that exists in the delta table and decide which one request from the API. 
+Now instead of hunderes and potentially thousands of requests a day it is enough to make just a few dozens to keep the data in our delta table up to date, saving storage, bandwitdth, execution time and promote a cortegeous use of available API interface.
 
 
 Tableau dashboard ...
