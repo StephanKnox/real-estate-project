@@ -32,6 +32,7 @@ Now instead of hunderes and potentially thousands of requests a day it is enough
 
 From technical perspective this change data capture mechanism is a left outer join between scraped properties dataframe with data in the delta table having fingerprint column as a join key. Join itself as well as sourcing the data is performed with Apache Spark. (PySpark)
 
+# Storage
 
 Tableau dashboard ...
 
