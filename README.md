@@ -30,6 +30,8 @@ This information should be available before making any API requests and only pro
 
 Now instead of hunderes and potentially thousands of requests a day it is enough to make just a few dozens (new properties that are for sale are not added in big numbers even when considering the entirity of Switzerland) to keep the data in our delta table up to date, saving storage, bandwitdth, execution time and promote a cortegeous use of available API interface.
 
+From technical perspective this change data capture mechanism is a left outer join between scraped properties dataframe with data in the delta table having fingerprint column as a join key. Join itself as well as sourcing the data is performed with Apache Spark. (PySpark)
+
 
 Tableau dashboard ...
 
