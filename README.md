@@ -5,7 +5,7 @@ to identify potentially attractive offers for buying a property.
 
 # Data Sources
 
-Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API interface allowing to make requests and receive a detailed property description. In order to make a call to an API it is necessary to provide a propery id (internal identifier of a property on the real-estate portal). There is also quite strict limit on the number of calls to the API, before receiving resource unavailable error. 
+Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API interface allowing to make requests and receive a detailed property description. In order to make a call to it, it is necessary to provide a propery id (internal identifier of a property on the real-estate portal). There is also quite strict limit on the number of calls to the API, before receiving resource unavailable error. 
 
 Considering points above two problems arise:
 
@@ -24,8 +24,7 @@ Web scraping itself is done with the help of another Python library - Beautiful 
 
 
 # Custom Change Data Capture (CDC)
-In order not to overburden an API with hundres of calls every day, there was a need in a mechanism which will allow to determine
-which properties are of interest, i.e. properties that do not exists yet in the data lakehouse table or existing properties that had a price change. 
+In order not to overburden an API with hundres of calls every day, some kind of mechanism is needed which will allow to determine which properties are of interest, i.e. properties that do not exists yet in the data lakehouse table or existing properties that had a price change. 
 
 This information should be available before making any API requests and only properties that are interesting should be requested. To solve this problem web scraping is used. Web pages are first retrieved from real-estate portal and then scraped for two values: property id and property price. Together these two consist a fingerprint - a unique identifier of each property and it's price. Knowing fingerprints of all properties in the location of interest on the real estate web portal allows to compare them with properties that exists in the delta table and decide which one request from the API. 
 
