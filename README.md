@@ -34,6 +34,10 @@ From technical perspective this change data capture mechanism is a left outer jo
 
 # Storage
 
+# Serving Layer
+
+# Analytics
+
 Tableau dashboard ...
 
 <img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
