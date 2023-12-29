@@ -15,14 +15,12 @@ Considering points above two problems arise:
 
 
 # Getting the Data
-Since requests to the API are made one by one, first property ids need to be identified. Besides the ids it would be useful to know property's price as well - this permits to implement custom CDC solution but on this down below.
+Since requests to the API are made one by one, first property ids need to be identified. Besides the ids it would be useful to know property's price as well - this will permit to implement a custom CDC solution - details down below.
 
-To get this data web scraping is used, that is, html pages are retrieved and then scraped for values of interest.
-Python library called Selenium designed for web tests automation is used to get correctly rendered html pages which are then saved in a local storage. Web scraping itself is done with the help of another Python library - Beautiful Soup.
-
-In order to increase web scraping performance all .html pages first retrieved and saved to a local storage
-and after scraped for property id and price. These two fields consists a finger print, i.e. a unique combination which
-indicates if the property already exists or not in the data lakehouse table and if it exists if the price has changed.
+To get this data web scraping is used, that is, html pages are retrieved and then scraped for the data points of interest.
+Python library called Selenium designed for web tests automation is used to get correctly rendered html pages. Those then are saved to a local storage. Saving them on disk rather than performing scraping "on the fly" increases both performance and fault 
+tolerance, if process of requesting html pages is interrupted there is no need to restart it from the beguinning and rather from the last succesfully retrieved property.
+Web scraping itself is done with the help of another Python library - Beautiful Soup and a Python method which scrapes for ids and prices. These two fields together consists a finger print, i.e. a unique combination which indicates if the property already exists or not in the data lakehouse table and if it exists if the price has changed.
 
 
 # Custom Change Data Capture (CDC)
