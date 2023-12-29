@@ -1,48 +1,24 @@
-# realestate_scraping
+# Zurich and Zug Real-Estate Market Analytics
 
-This is a [Dagster](https://dagster.io/) project scaffolded with [`dagster project scaffold`](https://docs.dagster.io/getting-started/create-new-project).
+I've started this project in order to get a sense of housing market situation in cantons of Zug and Zurich and 
+to identify attractive offers.
 
-## Getting started
+It consists of the input file containing TOP 250 IMDB movie titles, raw and staging S3 buckets, one of them linked to SFTP server, Postgres DB instance on RDS AWS as a serving layer and a Tableau dashboard. 
+All data ingestion and orchestration is performed via a python script "app.py" which acts as an entry point to the application. 
+Shell script "split_file.sh" splits the input file into 5 parts before making request to OMDB API.
+In order not to overburden API interface requests are performed at a rate limit of 25 calls per minute.
 
-First, install your Dagster code location as a Python package. By using the --editable flag, pip will install your Python package in ["editable mode"](https://pip.pypa.io/en/latest/topics/local-project-installs/#editable-installs) so that as you develop, local code changes will automatically apply.
+Pipeline takes the input file splitted in 5 parts and makes a call to OMDB API for each title 
+creating enriched files and uploads them over SSH to SFTP server on AWS linked to S3 "raw" bucket.
+From "raw" storage new files are transfered into the staging bucket and from there data is loaded 
+into Postgres database instance which functions as a serving layer for reporting via Tableau.
 
-```bash
-pip install -e ".[dev]"
-```
+Tableau dashboard shows best movies per decade, genre, best years in cinematography quantified by me as when 
+number of good movies produced in a year is 1.5 times higher than the average per year from 1920s up to 
+present day. It also shows how my preferences compare to IMDB rankings and the rating of movies I'd like to watch in the future.
 
-Then, start the Dagster UI web server:
-
-```bash
-dagster dev
-```
-
-Open http://localhost:3000 with your browser to see the project.
-
-You can start writing assets in `realestate_scraping/assets.py`. The assets are automatically loaded into the Dagster code location as you define them.
-
-## Development
+<img width="763" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/3ad4a774-8079-4bb9-b770-8fad104c8a4f">
 
 
-### Adding new Python dependencies
 
-You can specify new Python dependencies in `setup.py`.
 
-### Unit testing
-
-Tests are in the `realestate_scraping_tests` directory and you can run tests using `pytest`:
-
-```bash
-pytest realestate_scraping_tests
-```
-
-### Schedules and sensors
-
-If you want to enable Dagster [Schedules](https://docs.dagster.io/concepts/partitions-schedules-sensors/schedules) or [Sensors](https://docs.dagster.io/concepts/partitions-schedules-sensors/sensors) for your jobs, the [Dagster Daemon](https://docs.dagster.io/deployment/dagster-daemon) process must be running. This is done automatically when you run `dagster dev`.
-
-Once your Dagster Daemon is running, you can start turning on schedules and sensors for your jobs.
-
-## Deploy on Dagster Cloud
-
-The easiest way to deploy your Dagster project is to use Dagster Cloud.
-
-Check out the [Dagster Cloud Documentation](https://docs.dagster.cloud) to learn more.
