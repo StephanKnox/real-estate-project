@@ -30,6 +30,14 @@ This information should be available before making any API requests and only pro
 
 
 
+Tableau dashboard ...
+
+<img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
+
+
+
+
+
 
 
 
