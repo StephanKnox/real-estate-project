@@ -11,19 +11,19 @@ Considering points above two problems arise:
 
 1) It is not possible to just get all properties in X km raduis from the location of interest in a single API request, those are made 1 by 1 for each property.
   
-2) It is also not possible to make hundreds of requests a day, so already for only two locations - Zurich and Zug it will be 
-hard to maintain the data up to date. If more locations are added later in order to expand the analysis it will make it even harder.
+2) It is not feasible make hundreds abd thousands of requests a day, so already for only two locations - Zurich and Zug it will be hard to maintain the data up to date. If more locations are added later in order to expand the analysis it will be even harder.
 
 
 # Getting the Data
+Since requests to the API are made one by one, first property ids need to be identified. Besides the ids it would be useful to know property's price as well - this permits to implement custom CDC solution but on this down below.
 
-In order to get the propery id web scraping is needed, that is, get correctly rendered .html page and then scrape it for the 
-id. Many web sites including this one make it hard to just get .html page contents.
-Luckly Python library called Selenium designed for web tests automation can help to circumvent that obstacle.
-Web scraping itself is done with the help of another Python library - Beautiful Soup.
+To get this data web scraping is used, that is, html pages are retrieved and then scraped for values of interest.
+Python library called Selenium designed for web tests automation is used to get correctly rendered html pages which are then saved in a local storage. Web scraping itself is done with the help of another Python library - Beautiful Soup.
+
 In order to increase web scraping performance all .html pages first retrieved and saved to a local storage
 and after scraped for property id and price. These two fields consists a finger print, i.e. a unique combination which
 indicates if the property already exists or not in the data lakehouse table and if it exists if the price has changed.
+
 
 # Custom Change Data Capture (CDC)
 In order not to overburden an API with hundres of calls every day, there was a need in a mechanism which will allow to determine
