@@ -3,12 +3,19 @@
 I've started this project in order to get a sense of housing market situation in cantons of Zug and Zurich and 
 to identify potentially attractive offers for buying a property. 
 
-# Getting the Data
+# Data Sources
 
-Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API
-interface allowing to make requests and receive a very detailed description of a property.
-In order to make a call to an API it is necessary to provide a propery id (internal id of a property on the real-estate portal). There is also quite strict limit to the number of calls to the API, before receiving resource unavailable
-error. 
+Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API interface allowing to make requests and receive a very detailed description of a property. In order to make a call to an API it is necessary to provide a propery id (internal id of a property on the real-estate portal). There is also quite strict limit to the number of calls to the API, before receiving resource unavailable error. 
+
+Considering points above two problems arise:
+
+1) It is not possible to just get all properties in X km raduis from the location of interest in a single API request, those are made 1 by 1 for each property.
+  
+2) It is also not possible to make hundreds of requests a day, so already for only two locations - Zurich and Zug it will be 
+hard to maintain the data up to date. If more locations are added later in order to expand the analysis it will make it even harder.
+
+
+# Getting the Data
 
 In order to get the propery id web scraping is needed, that is, get correctly rendered .html page and then scrape it for the 
 id. Many web sites including this one make it hard to just get .html page contents.
@@ -28,9 +35,7 @@ This information should be available before making any API requests and only pro
 
 
 
-Tableau dashboard shows best movies per decade, genre, best years in cinematography quantified by me as when 
-number of good movies produced in a year is 1.5 times higher than the average per year from 1920s up to 
-present day. It also shows how my preferences compare to IMDB rankings and the rating of movies I'd like to watch in the future.
+Tableau dashboard ...
 
 <img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
 
