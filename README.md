@@ -3,10 +3,13 @@
 I've started this project in order to get a sense of housing market situation in cantons of Zug and Zurich and 
 to identify potentially attractive offers for buying a property. 
 
+# Getting the Data
+
 Main data source for the project is one of the most popular swiss real-estate web portals which also offers an API
 interface allowing to make requests and receive a very detailed description of a property.
 In order to make a call to an API it is necessary to provide a propery id (internal id of a property on the real-estate web portal). There is also quite strict limit to the number of calls to the API, before receiving resource unavailable
 error. 
+
 In order to get the propery id web scraping is needed, that is, get correctly rendered .html page and then scrape it for the 
 id. Many web sites including this one make it hard to just get .html page contents.
 Luckly Python library called Selenium designed for web tests automation can help to circumvent that obstacle.
