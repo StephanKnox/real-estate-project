@@ -14,7 +14,7 @@ Analysis can be easily expanded to include properties that are for rent and in a
 <img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
 
 
-## Data sources & challenges
+## Data Sources & Challenges
 
 Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API allowing to make requests and receive a detailed property description. In order to make a call to it, it is necessary to provide a propery id (internal identifier of a property on the real-estate portal). There is also quite strict limit on the number of calls to the API, before receiving resource unavailable error. 
 
