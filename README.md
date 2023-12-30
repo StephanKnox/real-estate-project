@@ -36,7 +36,7 @@ From technical perspective this change data capture mechanism is a left outer jo
 
 # Object Storage and Data Lake
 In order to not be locked to a cloud storage provider like Azure, AWS or GCP, MinIO object storage was chosen for this project.
-MinIO(https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and change to any of the mentioned cloud provider above if needed.
+[MinIO](https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and change to any of the mentioned cloud provider above if needed.
 For permanently storing the real-estate data Delta Lake format was used.
 
 
