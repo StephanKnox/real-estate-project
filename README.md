@@ -1,7 +1,11 @@
 # Zurich and Zug Real-Estate Market Analytics
 
-This project was started in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
-to identify potentially attractive offers for buying a property.
+I created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
+to identify potentially attractive offers for buying a property in Switzerland.
+
+# Project Diagramm
+
+<img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
 
 # Data Sources
 
@@ -40,7 +44,7 @@ From technical perspective this change data capture mechanism is a left outer jo
 
 Tableau dashboard ...
 
-<img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
+
 
 
 
