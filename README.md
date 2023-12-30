@@ -52,12 +52,13 @@ It has many useful features, most important ones for the project are:
 * Time travel capabilities - when one can query previous versions of the table
 
 
+## Serving Layer & Analytics
+One Big Table (OBT) located on PostGres Database instance is used as a data warehouse for the project. It serves data to a Tableau dashboard.
+In the future I plan to replace Tableau with Apache SuperSet data viz tool and so this project would be using 100% open source tools.
 
-# Serving Layer
+TO DO: Add Tableau Dashboard image
 
-# Analytics
 
-Tableau dashboard ...
 
 
 
