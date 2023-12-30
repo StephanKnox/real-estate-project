@@ -1,5 +1,5 @@
-I created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
-to identify potentially attractive offers for buying a property in Switzerland. Currently I am only interested in properties taht are for sale in these two cantons - analysis can be easily expanded to include properties that are for rent and in any number of locations in Switzerland.
+I've created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
+to identify potentially attractive offers for buying a property in Switzerland. Currently I am only interested in properties that are for sale in these two cantons - analysis can be easily expanded to include properties that are for rent and in any number of locations in Switzerland.
 
 ## Project Diagramm
 
@@ -34,7 +34,11 @@ Instead of hunderes and potentially thousands of requests a day it is enough to 
 
 From technical perspective this change data capture mechanism is a left outer join between scraped properties dataframe with data in the delta table having fingerprint column as a join key. Join itself as well as sourcing the data is performed with Apache Spark. (PySpark)
 
-# Storage
+# Object Storage and Data Lake
+In order to not be locked to a cloud storage provider like Azure, AWS or GCP, MinIO object storage was chosen for this project.
+MinIO(https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and change to any of the mentioned cloud provider above if needed.
+For permanently storing the real-estate data Delta Lake format was used.
+
 
 # Serving Layer
 
