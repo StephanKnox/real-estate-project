@@ -41,8 +41,9 @@ In order to not be locked to a specific cloud storage provider, MinIO object sto
 [MinIO](https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and easily change to any of existing cloud providers if needed.
 For storing and updating the real-estate data Delta Lake format was used. It is an open source storage framework built to implement a DataLakeHouse architecture. 
 It has many useful features, most important ones for the project are: 
-Support for schema evolution (schema of APIs responses is often changing, with columns being added and removed). This guarantees that ingestion pipeline will not break when schema is changed on API side
-Upserts and ACID Transactions - merge, update and delete with ACID capabilities are performed directly on your distributed files
+* Support for schema evolution (schema of APIs responses is often changing, with columns being added and removed). This guarantees that ingestion pipeline will not break when schema is changed on API side
+
+* Upserts and ACID Transactions - merge, update and delete with ACID capabilities are performed directly on your distributed files
 
 
 
