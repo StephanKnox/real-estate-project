@@ -56,6 +56,9 @@ It has many useful features, most important ones for the project are:
 
 * Time travel capabilities - when one can query previous versions of the table
 
+<img width="852" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/e822c3d6-172f-4415-94d6-6c29f73d36b8">
+
+
 
 ## Serving Layer & Analytics
 One Big Table (OBT) located on Postres db instance is used as a data warehouse for the project. It serves data to a Tableau dashboard providing interactive analytics capabilities with several data vizualisations.
