@@ -38,8 +38,9 @@ From technical perspective this change data capture mechanism is a left outer jo
 
 # Object Storage and Data Lake
 In order to not be locked to a specific cloud storage provider, MinIO object storage was chosen for this project.
+
 [MinIO](https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and easily change to any of existing cloud providers if needed.
-For storing and updating the real-estate data Delta Lake format was used. It is an open source storage framework built to implement a DataLakeHouse architecture. 
+For storing and updating the real-estate data [Delta Lake](https://delta.io/) format was used. It is an open source storage framework built to implement a DataLakeHouse architecture. 
 It has many useful features, most important ones for the project are: 
 * Support for schema evolution (schema of APIs responses is often changing, with columns being added and removed). This guarantees that ingestion pipeline will not break when schema is changed on API side
 
