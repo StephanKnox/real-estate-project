@@ -49,6 +49,8 @@ It has many useful features, most important ones for the project are:
 
 * Upserts and ACID Transactions - merge, update and delete with ACID capabilities are performed directly on your distributed files
 
+* Time travel capabilities - when one can query previous versions of the table
+
 
 
 # Serving Layer
