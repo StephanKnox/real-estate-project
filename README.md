@@ -14,7 +14,7 @@ Currently I am only interested in properties that are for sale in these two cant
 
 Main data source for this project is one of the most popular swiss real-estate web portals which also offers an API interface allowing to make requests and receive a detailed property description. In order to make a call to it, it is necessary to provide a propery id (internal identifier of a property on the real-estate portal). There is also quite strict limit on the number of calls to the API, before receiving resource unavailable error. 
 
-Considering points above two problems arise:
+Considering points above two challenges arise:
 
 1) It is not possible to just get all properties in X km raduis from the location of interest in a single API request, those are made 1 by 1 for each property.
   
