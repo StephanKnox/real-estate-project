@@ -35,7 +35,7 @@ In order not to overburden an API with hundres of calls every day, some kind of 
 
 This information should be available before making any API requests and only properties that are interesting should be requested. To solve this problem previously scraped property id and price are combined into one column - together these two consist a fingerprint: a unique identifier of each property and it's price. Knowing fingerprints of all properties in the location of interest on the real estate web portal allows to compare them with properties that are already ingested and decide which ones to request. 
 
-Instead of hunderes and potentially thousands of requests a day it is enough to make just a few dozens (new properties that are for sale are not added in big numbers even when considering the entirity of Switzerland). This mechanism allows to keep the data up to date, saving storage, bandwitdth, execution time and promotes a cortegeous use of an available API resource.
+Instead of hunderes and potentially thousands of requests a day it is enough to make just a few dozens (new properties are not added in big numbers even when considering the entirity of Switzerland). This mechanism allows to keep the data up to date, saving storage, bandwitdth, execution time and promotes a cortegeous use of an available API resource.
 
 From technical perspective this change data capture mechanism is a left outer join between scraped properties dataframe with data in the delta table having fingerprint column as a join key. Join itself as well as sourcing the data is performed with Apache Spark. (PySpark)
 
