@@ -1,6 +1,9 @@
 I've created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
-to identify potentially attractive offers for buying a property in Switzerland. The goal of the project is to create a data application which provides a detailed data-driven perspective for those looking to buy a property.
+to identify potentially attractive offers for buying a property in Switzerland. 
+
+The goal of the project is to create a data application which provides a detailed data-driven perspective for those looking to buy a property.
 Currently the first version of the project is completed which already includes some insights on properties that are best value for money, location and proximity to public transportation. In next versions I plan to include other data points like municipal taxes, how far are locations of leasure (like ski resorts and hiking destinations), schools and kindergartens and possibly other factors as well as imploying machine learning capabilities to determines which trends and  correlations contibute to the real-estate price dynamics the most.
+
 Currently I am only interested in properties that are for sale in these two cantons - analysis can be easily expanded to include properties that are for rent and in any number of locations in Switzerland.
 
 ## Project Diagramm
