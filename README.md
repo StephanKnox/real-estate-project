@@ -3,7 +3,7 @@
 I created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
 to identify potentially attractive offers for buying a property in Switzerland.
 
-# Project Diagramm
+## Project Diagramm
 
 <img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
 
