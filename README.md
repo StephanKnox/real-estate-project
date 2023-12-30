@@ -1,5 +1,7 @@
 I've created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
-to identify potentially attractive offers for buying a property in Switzerland. Currently I am only interested in properties that are for sale in these two cantons - analysis can be easily expanded to include properties that are for rent and in any number of locations in Switzerland.
+to identify potentially attractive offers for buying a property in Switzerland. The goal of the project is to create a data application which provides a detailed data-driven perspective for those looking to buy a property.
+Currently the first version of the project is completed which already includes some insights on properties that are best value for money, location and proximity to public transportation. In next versions I plan to include other data points like municipal taxes, how far are locations of leasure (like ski resorts and hiking destinations), schools and kindergartens and possibly other factors as well as imploying machine learning capabilities to determines which trends and  correlations contibute to the real-estate price dynamics the most.
+Currently I am only interested in properties that are for sale in these two cantons - analysis can be easily expanded to include properties that are for rent and in any number of locations in Switzerland.
 
 ## Project Diagramm
 
@@ -35,9 +37,13 @@ Instead of hunderes and potentially thousands of requests a day it is enough to 
 From technical perspective this change data capture mechanism is a left outer join between scraped properties dataframe with data in the delta table having fingerprint column as a join key. Join itself as well as sourcing the data is performed with Apache Spark. (PySpark)
 
 # Object Storage and Data Lake
-In order to not be locked to a cloud storage provider like Azure, AWS or GCP, MinIO object storage was chosen for this project.
-[MinIO](https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and change to any of the mentioned cloud provider above if needed.
-For permanently storing the real-estate data Delta Lake format was used.
+In order to not be locked to a specific cloud storage provider, MinIO object storage was chosen for this project.
+[MinIO](https://min.io/) is s3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and easily change to any of existing cloud providers if needed.
+For storing and updating the real-estate data Delta Lake format was used. It is an open source storage framework built to implement a DataLakeHouse architecture. 
+It has many useful features, most important ones for the project are: 
+Support for schema evolution (schema of APIs responses is often changing, with columns being added and removed). This guarantees that ingestion pipeline will not break when schema is changed on API side
+Upserts and ACID Transactions - merge, update and delete with ACID capabilities are performed directly on your distributed files
+
 
 
 # Serving Layer
