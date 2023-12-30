@@ -61,6 +61,7 @@ TO DO: Add Tableau Dashboard image
 Dagster in a job orchestration tool currently gaining a lot of popularity among data engineering community as an alternative to Apache AirFlow.
 It was build with a high-level abstraction in mind, where each task is a software defined asset, with it's own set of resources.
 This way business logicand technical code are clearly separated, resources can be shared across tasks and only written once.
+
 Dagster also provides a full blown UI for managing your pipelines runs, statuses, logs and schedules and embraces the functional programming paradigm:
 by writing your pipelines you are writing functional assets that are declarative, abstractedm idempotent and type-checked. It also includes unit-testing features and has integrations with Great Expectations data quality platform.
 
