@@ -6,9 +6,11 @@ Currently the first version of the project is completed which already includes s
 
 Currently I am only interested in properties that are for sale in these two cantons - analysis can be easily expanded to include properties that are for rent and in any number of locations in Switzerland.
 
+
 ## Project Diagramm
 
 <img width="788" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/6e78f78f-09ff-477a-8852-8bdc1e247536">
+
 
 ## Data Sources
 
@@ -39,6 +41,7 @@ Instead of hunderes and potentially thousands of requests a day it is enough to 
 
 From technical perspective this change data capture mechanism is a left outer join between scraped properties dataframe with data in the delta table having fingerprint column as a join key. Join itself as well as sourcing the data is performed with Apache Spark. (PySpark)
 
+
 ## Object Storage and Data Lake
 In order to not be locked to a specific cloud storage provider, MinIO object storage was chosen for this project.
 [MinIO](https://min.io/) is S3 compatible object storage which serves as a gateway to the data which allows to stay cloud-agnostic and easily change to any of existing cloud providers if needed.
@@ -56,6 +59,7 @@ It has many useful features, most important ones for the project are:
 One Big Table (OBT) located on Postres db instance is used as a data warehouse for the project. It serves data to a Tableau dashboard providing interactive analytics capabilities with several data vizualisations.
 In the future I plan to replace Tableau with Apache SuperSet data viz tool in order to make this project to use 100% of open source tools.
 TO DO: Add Tableau Dashboard image
+
 
 ## Job Orchestration
 Dagster in a job orchestration tool currently gaining a lot of popularity among data engineering community as an alternative to Apache AirFlow.
