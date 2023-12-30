@@ -55,8 +55,16 @@ It has many useful features, most important ones for the project are:
 ## Serving Layer & Analytics
 One Big Table (OBT) located on PostGres Database instance is used as a data warehouse for the project. It serves data to a Tableau dashboard.
 In the future I plan to replace Tableau with Apache SuperSet data viz tool and so this project would be using 100% open source tools.
-
 TO DO: Add Tableau Dashboard image
+
+## Job Orchestration
+Dagster in a job orchestration tool currently gaining a lot of popularity among data engineering community as an alternative to Apache AirFlow.
+It was build with a high-level abstraction in mind, where each task is a software defined asset, with it's own set of resources.
+This way business logicand technical code are clearly separated, resources can be shared across tasks and only written once.
+Dagster also provides a full blown UI for managing your pipelines runs, statuses, logs and schedules and embraces the functional programming paradigm:
+by writing your pipelines you are writing functional assets that are declarative, abstractedm idempotent and type-checked. It also includes unit-testing features and has integrations with Great Expectations data quality platform.
+
+
 
 
 
