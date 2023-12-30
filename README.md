@@ -72,6 +72,7 @@ This way business logicand technical code are clearly separated, resources can b
 Dagster also provides a full blown UI for managing your pipelines runs, statuses, logs and schedules and embraces the functional programming paradigm:
 by writing your pipelines you are writing functional assets that are declarative, abstracted, idempotent and type-checked. It also includes unit-testing features and has integrations with Great Expectations data quality platform.
 
+
 <img width="1498" alt="image" src="https://github.com/StephanKnox/real-estate-project/assets/123996543/76a5aa27-e2fc-4715-980f-ee4e933c899b">
 
 
