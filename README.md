@@ -1,3 +1,5 @@
+## Introduction
+
 I've created with project in order to get a good sense of housing market situation in cantons of Zug and Zurich and 
 to identify potentially attractive offers for buying a property in Switzerland. 
 
