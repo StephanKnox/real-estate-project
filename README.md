@@ -62,7 +62,7 @@ It has many useful features, most important ones for the project are:
 
 ## Serving Layer & Analytics
 One Big Table (OBT) located on Postres db instance is used as a data warehouse for the project. It serves data to a Tableau dashboard providing interactive analytics capabilities with several data vizualisations.
-In the future, plan is to replace Tableau with Apache SuperSet data viz tool in order to make this project run on 100% open source tools.
+In the future, plan is to replace Tableau with Apache SuperSet data visualization tool.
 
 TO DO: Add Tableau Dashboard image
 
