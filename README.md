@@ -22,7 +22,7 @@ Considering points above two challenges arise:
 
 1) It is not possible to just get all properties in X km raduis from the location of interest in a single API request, those are made 1 by 1 for each property.
   
-2) It is not feasible to make hundreds and thousands of requests a day, for only two locations - Zurich and Zug it will be already hard to maintain the data up to date on a daily basis. If more locations are added later in order to expand the analysis it will be even harder.&&
+2) It is not feasible to make hundreds and thousands of requests a day, for only two locations - Zurich and Zug it will be already hard to maintain the data up to date on a daily basis. If more locations are added later in order to expand the analysis it will be even harder.
 
 
 ## Getting the Data
