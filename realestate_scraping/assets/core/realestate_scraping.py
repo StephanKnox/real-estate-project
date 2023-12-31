@@ -59,10 +59,7 @@ def download_pages(context):
             context.log.error(f"Connection Error: Could not connect to {page}")
 
 
-# TO DO: Change return type to a property dataframe? -> PropertyDataFrame, where to define PropertyDataFrame type?
-@asset (
-        #io_manager_key="local_parquet_io_manager"
-        )
+@asset ()
 def scrape_pages(context, download_pages):
     """Scrapes downloaded .html pages on local ./data/html/ folder for ids and prices.
     Only pages which were created today() are scraped"""
@@ -167,10 +164,8 @@ def cache_properties(context, get_new_or_changed_props):
         tot_len = len(get_new_or_changed_props)
 
         for idx, _property in enumerate(get_new_or_changed_props):  
-            #context.log.info(_property)
             context.log.info(_property['id'])
             result = hf.get_property_from_api(API_ENDPOINT, _property['id'])
-            #context.log.info(result.text+'\n')
             if result.ok:
                 hf.cache_property_from_api(result, _property, LOCAL_PATH_OUT)
             elif result.status_code == 503:
