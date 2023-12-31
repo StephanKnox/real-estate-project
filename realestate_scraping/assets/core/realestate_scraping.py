@@ -7,31 +7,28 @@ from pyspark.sql import  DataFrame, Row
 from pyspark.sql.types import StructField, StructType, StringType, ArrayType
 from pyspark.sql.functions import explode_outer, col
 from delta.tables import DeltaTable
-#from delta.pip_utils import configure_spark_with_delta_pip
 import pandas as pd
 import pandasql as psql
 import pyspark.pandas as ps
 import pyarrow
 from botocore.exceptions import NoCredentialsError
 from delta.pip_utils import configure_spark_with_delta_pip
-#from minio.error import ResponseError
+from dotenv import load_dotenv
 
 
-REALESTATE_BASE_URL = 'https://www.immoscout24.ch/en/real-estate/buy/city-'
-REALESTATE_CITY = 'zuerich'
-REALESTATE_RADIUS = '1'
-LOCAL_PATH = './realestate_scraping/data/htmls/'
-LOCAL_PATH_OUT = './realestate_scraping/data/out/'
-BUCKET_RAW = 'raw'
-API_ENDPOINT = "https://rest-api.immoscout24.ch/v4/en/properties/"
+load_dotenv() 
+
+REALESTATE_BASE_URL = os.getenv('REALESTATE_BASE_URL')
+REALESTATE_CITY = os.getenv('REALESTATE_CITY')
+REALESTATE_RADIUS = os.getenv('REALESTATE_RADIUS')
+LOCAL_PATH = os.getenv('LOCAL_PATH')
+LOCAL_PATH_OUT = os.getenv('LOCAL_PATH_OUT')
+BUCKET_RAW = os.getenv('BUCKET_RAW')
+API_ENDPOINT = os.getenv('API_ENDPOINT_REALESTATE')
 
 
-    #group_name="scraping",
-    #io_manager_key="io_manager", 
-@asset(
-        #io_manager_key="fs_io_manager"
-        )
-def download_pages(context): #-> FileHandle:
+@asset()
+def download_pages(context): 
     """Downloads .html pages from realestate website to a local ./data/html/ folder"""
     
     date_today = datetime.today().strftime('%y%m%d')
@@ -45,7 +42,7 @@ def download_pages(context): #-> FileHandle:
             + str(idx)
             + '&r='
             + str(REALESTATE_RADIUS)
-            + '&map=1'  # only property with prices (otherwise mapping id to price later on does not map)
+            + '&map=1'  # only property with prices
             + ''
         )
         context.log.info(url)
@@ -138,8 +135,6 @@ def get_new_or_changed_props(context, scrape_pages):
     )
 
     pd_existing_properties = pd.DataFrame(existing_props, columns=cols_props)
-    #context.log.info(f"Existing properties : {pd_existing_properties}")
-
     pd_changed_properties = psql.sqldf(""" 
     SELECT 
         p.id, p.fingerprint, p.city, p.radius, p.last_normalized_price
@@ -148,7 +143,6 @@ def get_new_or_changed_props(context, scrape_pages):
     ON p.id = e.propertyDetails_id
     WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL
     """)
-    ## WHERE p.fingerprint != e.fingerprint OR e.fingerprint IS NULL
 
     if pd_changed_properties.empty:
         context.log.info("No property of [{}] changed".format(ids))
@@ -161,9 +155,6 @@ def get_new_or_changed_props(context, scrape_pages):
 
         context.log.info(f"Number of new or changed properties: {len(changed_properties)}")
         context.log.info("New or changed properties ids: {}".format(ids_changed))
-    # return /yield changed_properties
-    #context.log.info(type(changed_properties))
-    #context.log.info(changed_properties)
 
     return changed_properties
         
@@ -198,15 +189,12 @@ def cache_properties(context, get_new_or_changed_props):
     required_resource_keys={"s3"}
 )
 def upload_to_s3(context, cache_properties): ## 
-    #s3_client = context.resources.s3._get_s3_client()
-    #objects = s3_client.list_objects(context.resources.s3.bucket_name ,recursive=True)
     """Uploads files retrieved from an realestate API from local /data/out/ folder to S3 WAR bucket on MINIO.
     Only files created today() are taken."""
 
     pages_to_upload = hf.get_pages_from_local(LOCAL_PATH_OUT)
     
     for _obj in pages_to_upload:
-        #context.log.info(_obj)
         filename = os.path.basename(_obj)
         raw_bucket_path = context.resources.s3.path_to_raw
         try:
@@ -216,12 +204,6 @@ def upload_to_s3(context, cache_properties): ##
          context.log.error("The file was not found")
         except NoCredentialsError:
             context.log.error("Credentials not available")
-    #for obj in objects:
-     #   context.log.info(#obj.bucket_name
-      #       obj.object_name.encode('utf-8')) #obj.last_modified +' '+
-            #+' '+obj.etag  obj.size, obj.content_type)
-    #context.log.info(s3_client.list_buckets())
-    
 
 @asset(
         required_resource_keys={"spark_delta", "s3"},
@@ -243,8 +225,6 @@ def json_to_flat_properties(context) -> DataFrame:
         .format("json") \
         .option("compression", "gzip") \
         .load("s3a://staging/*.gz")
-        ##.load(context.resources.spark_delta.path_to_raw+"/*.gz")
-        #
     
     context.log.info(f"{df.count()} files were read into a data frame.")
     
@@ -253,7 +233,6 @@ def json_to_flat_properties(context) -> DataFrame:
         (_field.name, _field.dataType) 
         for _field in df.schema.fields
         if type(_field.dataType) == StructType
-        ##if type(_field.dataType) == ArrayType or type(_field.dataType) == StructType
     ]
     )
   
@@ -289,7 +268,6 @@ def json_to_flat_properties(context) -> DataFrame:
         .drop("propertyDetails_commuteTimes_defaultPois_transportations") \
         .drop("viewData_viewDataWeb_webView_structuredData")
     
-    #context.log.info(os.path.join(context.run_id, context.step_key, context.name))
     context.log.info(df.count())
     return df
     
@@ -299,22 +277,11 @@ def json_to_flat_properties(context) -> DataFrame:
         io_manager_key="local_parquet_io_manager"
 )
 def create_delta_table(context, json_to_flat_properties: DataFrame):
-    #df = context.resources.spark_delta._read_delta_table()
     df = json_to_flat_properties
-    #context.log.info(df.count())
     spark_session = context.resources.spark_delta._get_spark_session()
     spark_session.sql("""CREATE DATABASE IF NOT EXISTS realestate""")
     spark_session.sql("""DROP TABLE IF EXISTS realestate.property""")
 
-   
-
-    ##spark_session.sql("""
-    ##    CREATE TABLE IF NOT EXISTS {}.{}
-    ##    USING DELTA
-    ##    LOCATION "{}"
-    ##    """)
-    
-    #spark_session.sql("""DROP TABLE IF EXISTS 's3a://real-estate/lake/bronze/property'""")
     df.write.format("delta")\
         .mode("overwrite")\
         .option("mergeSchema", "true") \
@@ -324,7 +291,6 @@ def create_delta_table(context, json_to_flat_properties: DataFrame):
         .load("s3a://real-estate/lake/bronze/property")
 
     context.log.info(f"Schema of the delta table: \n{df_delta.count()}")
-#print(df_acidentes_delta.show(4))
 
 
 @asset(

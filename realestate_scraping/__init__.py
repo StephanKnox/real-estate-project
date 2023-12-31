@@ -61,9 +61,6 @@ class S3Credentials(ConfigurableResource):
         for _obj in self._list_files_s3(src_bucket)
         if today in _obj.object_name ]
         
-        #for _obj in list:
-                #s3_client.copy_object(tgt_bucket, _obj.object_name, CopySource(src_bucket, _obj.object_name))
-
 
 class SparkHelper(ConfigurableResource):
     path_to_delta: str
@@ -111,21 +108,16 @@ class SparkHelper(ConfigurableResource):
             .read \
             .format("json") \
             .option("compression", "gzip") \
-            .load(self.path_to_raw+"*.gz")
-        #df_zipped.printSchema()     
+            .load(self.path_to_raw+"*.gz")   
         return df_zipped
     
-
-    # TO change    
+    
     def handle_output(self, context, obj):
-        #obj.write.parquet(self._get_path(context))
         obj.write.parquet('./data')
 
 
-    # TO change
     def load_input(self, context):
         spark = SparkHelper()._get_spark_session
-        #return spark.read.parquet(self._get_path(context.upstream_output))
         return spark.read.parquet('./data')
 
 
@@ -155,28 +147,18 @@ class LocalParquetIOManager(ConfigurableIOManager):
         return spark
     
 
-    # TO chage
     def _get_path(self, context):
         return os.path.join(context.run_id, context.step_key, context.name)
         
-
-    # TO change    
+  
     def handle_output(self, context, obj):
-        #session = SparkHelper()
-        #spark = session._get_spark_session()
-        
-        #obj.write.parquet(self._get_path(context))
         obj.write.mode("overwrite").parquet('./data')
 
 
-    # TO change
     def load_input(self, context):
-        #spark = SparkSession.builder.getOrCreate()#SparkHelper()._get_spark_session
-        #return spark.read.parquet(self._get_path(context.upstream_output))
         spark_delta = self._get_spark_session()
-
         return spark_delta.read.parquet('./data')
-#deployment_name = os.environ.get("DAGSTER_DEPLOYMENT", "local")
+
 
 
 @io_manager
@@ -210,16 +192,3 @@ defs = Definitions(
             )
     },
 )
-
-
-
-#defs = Definitions(
-#    assets=load_assets_from_package_module(assets),
-#    schedules=[
-#        ScheduleDefinition(
-#            job=define_asset_job(name="daily_refresh", selection="*"),
-#           cron_schedule="@daily",
-#        )
-#    ],
-#    resources={"github_api": Github(os.environ["GITHUB_ACCESS_TOKEN"])},
-#)
