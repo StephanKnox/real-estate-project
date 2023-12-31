@@ -62,13 +62,13 @@ It has many useful features, most important ones for the project are:
 
 ## Serving Layer & Analytics
 One Big Table (OBT) located on Postres db instance is used as a data warehouse for the project. It serves data to a Tableau dashboard providing interactive analytics capabilities with several data vizualisations.
-In the future, plan is to replace Tableau with Apache SuperSet data viz tool in order to make this project to use 100% of open source tools.
+In the future, plan is to replace Tableau with Apache SuperSet data viz tool in order to make this project run on 100% open source tools.
 
 TO DO: Add Tableau Dashboard image
 
 
 ## Job Orchestration
-Dagster in a job orchestration tool currently gaining a lot of popularity among data engineering community as an alternative to Apache AirFlow.
+Dagster is a job orchestration tool currently gaining a lot of popularity among data engineering community as an alternative to Apache AirFlow.
 It was built with a high-level abstraction in mind, where each task is a software defined asset, with its own set of resources.
 This way, business logic and technical code are clearly separated, and resources can be shared across tasks and written only once.
 
